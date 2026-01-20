@@ -56,6 +56,15 @@ str(resp_dat_usa)
 # specify current format as mm/dd/yyyy
 resp_dat_usa$week_end <- as.Date(resp_dat_usa$week_end, "%m/%d/%Y")
 
+# clean up condition names
+
+resp_dat_usa <- resp_dat_usa %>%
+  mutate(condition=case_when(
+    condition=="covid" ~ "COVID-19",
+    condition=="influenza" ~ "Influenza",
+    condition=="rsv" ~ "RSV")
+  )
+
 # MERGE IN MMWR WEEKS ----------------------------------------------------------
 
 # load mmwr dates data
@@ -87,3 +96,4 @@ head(resp_dat_usa)
 
 # SAVE DATASET FOR TRAINING ----------------------------------------------------
 write.csv(resp_dat_usa, ".\\Datasets\\resp-dat-usa.csv", row.names=F)
+
