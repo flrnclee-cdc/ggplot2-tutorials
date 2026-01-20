@@ -1,45 +1,78 @@
+# DESCRIPTION ------------------------------------------------------------------
 
-# Build Chart ------------------------------------------------------------------
+#' Enter description here
 
-#' set data: resp_dat_usa
-#' set aesthetics: x, y
-#' assign geometry: line
+# SET-UP -----------------------------------------------------------------------
 
-# Basic chart
-ggplot(data=resp_dat_usa, 
-       aes(x=week_end, y=percent_visits, group = condition)) +
-  geom_line() 
+# load packages
 
-# add colors
+library(openxlsx)
+library(tidyverse)
+library(ggtext)
+library(ggrepel)
 
-ggplot(data=resp_dat_usa, 
-       aes(x=week_end, y=percent_visits, group=condition)) +
-  geom_line(aes(colour=condition))
+# set directory 
 
-# customize colors
+getwd() #shows current directory
+setwd("C:\\Users\\kwn5\\OneDrive - CDC\\Trainings\\2026_EIS-Training\\ggplot2-tutorials") 
 
-ggplot(data=resp_dat_usa, 
-       aes(x=week_end, y=percent_visits, group=condition)) +
-  geom_line(aes(colour=condition)) +
-  scale_color_manual(values=c(covid="#F06F19", influenza="#0A58D6",rsv="#890664"))
+# READ IN DATA -----------------------------------------------------------------
 
-# increase boldness of lines
+resp_dat_usa <- read.csv(".\\Datasets\\resp-dat-usa.csv")
 
-ggplot(data=resp_dat_usa, 
-       aes(x=week_end, y=percent_visits, group=condition)) +
+# view summary
+str(resp_dat_usa)
+
+# check data types
+resp_dat_usa$week_end <- as.Date(resp_dat_usa$week_end, "%Y-%m-%d")
+
+# CREATE CHART -----------------------------------------------------------------
+
+# Assign data to aesthetics
+
+base <- ggplot(data=resp_dat_usa, 
+       aes(x=week_end, y=percent_visits, group = condition))
+
+base
+
+# Assign geometry
+
+base + geom_line()
+
+# Increase line thickness - default is too light!
+
+base + geom_line(linewidth=1.5)
+
+# Add colors to lines
+
+base + geom_line(aes(colour=condition), linewidth=1.5)
+
+# Customize colors
+
+base +
   geom_line(aes(colour=condition), linewidth=1.5) +
-  scale_color_manual(values=c(covid="#F06F19", influenza="#0A58D6",rsv="#890664"))
+  scale_color_manual(values=c("COVID-19"="#C04F15", "Influenza"="#0A58D6","RSV"="#652B5A"))
 
-# modify scales
+# Add and modify scales
 
-ggplot(data=resp_dat_usa, 
-       aes(x=week_end, y=percent_visits, group=condition)) +
+#' default scales were added based on what we have so far, but we need to
+#' customize how we want them to appear
+
+base +
   geom_line(aes(colour=condition), linewidth=1.5) +
-  scale_color_manual(values=c(covid="#F06F19", influenza="#0A58D6",rsv="#890664")) +
+  scale_color_manual(values=c("COVID-19"="#C04F15", "Influenza"="#0A58D6","RSV"="#652B5A")) +
+  # y-axis is continuous
+  # limit: min of 0, max of 9
+  # breaks: tick marks every 1 unit
   scale_y_continuous(limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
+  # x-axis is date
+  # date_breaks: tick marks every 6 months
+  # date_labels: format as "Jan. YYYY"
   scale_x_date(date_breaks = "6 months", date_labels="%b %Y", expand=c(0,0))
 
-# improve titles
+# NOTE: Coordinate system is inferred to be Cartesian.
+
+# Add title
 
 ggplot(data=resp_dat_usa, 
        aes(x=week_end, y=percent_visits, group=condition)) +
