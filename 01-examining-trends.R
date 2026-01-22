@@ -1,22 +1,21 @@
-# DESCRIPTION ------------------------------------------------------------------
+# DESCRIPTION ==================================================================
 
-#' Enter description here
+#' Step-by-step tutorial on creating a single-panel and multi-panel line chart
 
-# SET-UP -----------------------------------------------------------------------
+# SET-UP =======================================================================
 
 # load packages
 
 library(openxlsx)
 library(tidyverse)
 library(ggtext)
-library(ggrepel)
 
 # set directory 
 
 getwd() #shows current directory
 setwd("C:\\Users\\kwn5\\OneDrive - CDC\\Trainings\\2026_EIS-Training\\ggplot2-tutorials") 
 
-# READ IN DATA -----------------------------------------------------------------
+# READ IN DATA =================================================================
 
 resp_dat_usa <- read.csv(".\\Datasets\\resp-dat-usa.csv")
 
@@ -26,16 +25,16 @@ str(resp_dat_usa)
 # check data types
 resp_dat_usa$week_end <- as.Date(resp_dat_usa$week_end, "%Y-%m-%d")
 
-# CREATE CHART -----------------------------------------------------------------
+# CREATE BASIC CHART ===========================================================
 
-# Assign data to aesthetics
+# Assign data to aesthetics ----------------------------------------------------
 
 base <- ggplot(data=resp_dat_usa, 
-       aes(x=week_end, y=percent_visits, group = condition))
+       aes(x=week_end, y=percent_visits, group=condition))
 
 base
 
-# Assign geometry
+# Assign geometry --------------------------------------------------------------
 
 base + geom_line()
 
@@ -53,497 +52,1078 @@ base +
   geom_line(aes(colour=condition), linewidth=1.5) +
   scale_color_manual(values=c("COVID-19"="#C04F15", "Influenza"="#0A58D6","RSV"="#652B5A"))
 
-# Add and modify scales
+# Add and modify scales --------------------------------------------------------
 
-#' default scales were added based on what we have so far, but we need to
-#' customize how we want them to appear
+#' default scales were added based on our data, but we can customize to what we want
 
 base +
   geom_line(aes(colour=condition), linewidth=1.5) +
   scale_color_manual(values=c("COVID-19"="#C04F15", "Influenza"="#0A58D6","RSV"="#652B5A")) +
   # y-axis is continuous
   # limit: min of 0, max of 9
-  # breaks: tick marks every 1 unit
+  # breaks: tick marks for every 1 unit
+  # expand to edge of chart
   scale_y_continuous(limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
   # x-axis is date
-  # date_breaks: tick marks every 6 months
-  # date_labels: format as "Jan. YYYY"
+  # date_breaks: tick marks for every 6 months
+  # date_labels: format as "Jan YYYY"
+  # expand to edge of chart
   scale_x_date(date_breaks = "6 months", date_labels="%b %Y", expand=c(0,0))
 
 # NOTE: Coordinate system is inferred to be Cartesian.
 
-# Add title
+# Add annotations --------------------------------------------------------------
 
-ggplot(data=resp_dat_usa, 
-       aes(x=week_end, y=percent_visits, group=condition)) +
+# Add chart title
+
+#' since chart titles are long, you can store them in variables
+
+ctitle <- "The percentage of emergency department (ED) visits with a discharge diagnosis of influenza reached a high of 8.5% during the last week of 2025 before decreasing to 6.3% during the first week of 2026."
+csubtitle <- "The percentage of ED visits with a discharge diagnosis of COVID-19 or RSV during the first week of 2026 was 0.9% and 0.%, respectively."
+
+base +
+  # GEOMETRY ----------------------------------------------------------------
   geom_line(aes(colour=condition), linewidth=1.5) +
-  scale_color_manual(values=c(covid="#F06F19", influenza="#0A58D6",rsv="#890664")) +
-  scale_y_continuous(name="Percent of ED visits",
-                     limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
-  scale_x_date(name="Week end", date_breaks = "6 months", date_labels="%b %Y", 
-               expand=c(0,0)) +
-  ggtitle("Emergency department visits in the United States")
+  # SCALES ------------------------------------------------------------------
+  scale_color_manual(values=c("COVID-19"="#C04F15", "Influenza"="#0A58D6","RSV"="#652B5A")) +
+  scale_y_continuous(limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
+  scale_x_date(date_breaks = "6 months", date_labels="%b %Y", expand=c(0,0)) +
+  # TITLES ------------------------------------------------------------------
+  labs(title = ctitle, subtitle=csubtitle)
 
-# modify legend
+#' the title bleeds out of chart space, but we will deal with this later
 
-ggplot(data=resp_dat_usa, 
-       aes(x=week_end, y=percent_visits, group=condition)) +
+# Add footnote
+
+ftnt <- "Data source: National Syndromic Surveillance Program. Data available at: https://data.cdc.gov/Public-Health-Surveillance/NSSP-Emergency-Department-Visit-Trajectories-by-St/rdmq-nq56/about_data"
+
+base +
+  # GEOMETRY ----------------------------------------------------------------
   geom_line(aes(colour=condition), linewidth=1.5) +
-  scale_color_manual(values=c(covid="#F06F19", influenza="#0A58D6",rsv="#890664")) +
-  scale_y_continuous(name="Percent of ED visits",
-                     limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
-  scale_x_date(name="Week end", date_breaks = "6 months", date_labels="%b %Y", 
-               expand=c(0,0)) +
-  guides(colour = guide_legend(title="")) +
-  ggtitle("Emergency department visits in the United States") 
+  # SCALES ------------------------------------------------------------------
+  scale_color_manual(values=c("COVID-19"="#C04F15", "Influenza"="#0A58D6","RSV"="#652B5A")) +
+  scale_y_continuous(limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
+  scale_x_date(date_breaks = "6 months", date_labels="%b %Y", expand=c(0,0)) +
+  # TITLES ------------------------------------------------------------------
+  labs(title=ctitle, subtitle=csubtitle, caption=ftnt)
 
-# apply a theme
-# I usually like theme_bw() or theme_minimal()
+#' footnote also bleeds out of chart space, but we will deal with this later
 
-ggplot(data=resp_dat_usa, 
-       aes(x=week_end, y=percent_visits, group=condition)) +
+# Add axis labels
+
+base +
+  # GEOMETRY ----------------------------------------------------------------
   geom_line(aes(colour=condition), linewidth=1.5) +
-  scale_color_manual(values=c(covid="#F06F19", influenza="#0A58D6",rsv="#890664")) +
-  scale_y_continuous(name="Percent of ED visits",
-                     limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
-  scale_x_date(name="Week end", date_breaks = "6 months", date_labels="%b %Y", 
-               expand=c(0,0)) +
-  guides(colour = guide_legend(title="")) +
-  ggtitle("Emergency department visits in the United States") + 
+  # SCALES ------------------------------------------------------------------
+  scale_color_manual(values=c("COVID-19"="#C04F15", "Influenza"="#0A58D6","RSV"="#652B5A")) +
+  scale_y_continuous(limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
+  scale_x_date(date_breaks = "6 months", date_labels="%b %Y", expand=c(0,0)) +
+  # TITLES ------------------------------------------------------------------
+  labs(title=ctitle, subtitle=csubtitle, caption=ftnt) +
+  xlab(label="Week end") +
+  ylab("Percent of ED visits")
+
+# Modify legend
+
+#' move legend to top to help readers understand color encoding before chart
+#' modify title with proper casing
+
+base +
+  # GEOMETRY ----------------------------------------------------------------
+  geom_line(aes(colour=condition), linewidth=1.5) +
+  # SCALES ------------------------------------------------------------------
+  scale_color_manual(values=c("COVID-19"="#C04F15", "Influenza"="#0A58D6","RSV"="#652B5A")) +
+  scale_y_continuous(limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
+  scale_x_date(date_breaks = "6 months", date_labels="%b %Y", expand=c(0,0)) +
+  # TITLES ------------------------------------------------------------------
+  labs(title=ctitle, subtitle=csubtitle, caption=ftnt) +
+  xlab(label="Week end") +
+  ylab("Percent of ED visits") +
+  # LEGEND ------------------------------------------------------------------
+  # for colour attribute, use a legend
+  # for legends, use guide_legend() to customize
+  guides(colour=guide_legend(title="Condition", position="top"))
+
+# Apply theme ------------------------------------------------------------------
+
+#' ggplot2 has a number of built-in themes you can apply to your chart
+#' https://ggplot2.tidyverse.org/reference/ggtheme.html
+#' 
+#' let's apply theme_minimal() to improve the look-and-feel 
+
+base +
+  # GEOMETRY ----------------------------------------------------------------
+  geom_line(aes(colour=condition), linewidth=1.5) +
+  # SCALES ------------------------------------------------------------------
+  scale_color_manual(values=c("COVID-19"="#C04F15", "Influenza"="#0A58D6","RSV"="#652B5A")) +
+  scale_y_continuous(limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
+  scale_x_date(date_breaks = "6 months", date_labels="%b %Y", expand=c(0,0)) +
+  # TITLES ------------------------------------------------------------------
+  labs(title=ctitle, subtitle=csubtitle, caption=ftnt) +
+  xlab(label="Week end") +
+  ylab("Percent of ED visits") +
+  # LEGEND ------------------------------------------------------------------
+  guides(colour=guide_legend(title="Condition", position="top")) +
+  # THEME -------------------------------------------------------------------
   theme_minimal()
 
-# modify theme
-# place legend at the top
+#' themes can be further customized. 
+ 
+# example: legend title should be bold and match the size of legend text.
 
-ggplot(data=resp_dat_usa, 
-       aes(x=week_end, y=percent_visits, group=condition)) +
+text_size <- theme_minimal()$text$size
+theme_minimal()$legend.text #'rel' num 0.8, which means legend text 80% of $text
+# specify a smaller text size for labeling
+label_size <- text_size * 0.8
+# specify even smaller text for footnote
+ftnt_size <- text_size * 0.7
+
+base +
+  # GEOMETRY ----------------------------------------------------------------
   geom_line(aes(colour=condition), linewidth=1.5) +
-  scale_color_manual(values=c(covid="#F06F19", influenza="#0A58D6",rsv="#890664")) +
-  scale_y_continuous(name="Percent of ED visits",
-                     limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
-  scale_x_date(name="Week end", date_breaks = "6 months", date_labels="%b %Y", 
-               expand=c(0,0)) +
-  guides(colour = guide_legend(title="")) +
-  ggtitle("Emergency department visits in the United States") + 
+  # SCALES ------------------------------------------------------------------
+  scale_color_manual(values=c("COVID-19"="#C04F15", "Influenza"="#0A58D6","RSV"="#652B5A")) +
+  scale_y_continuous(limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
+  scale_x_date(date_breaks = "6 months", date_labels="%b %Y", expand=c(0,0)) +
+  # TITLES ------------------------------------------------------------------
+  labs(title=ctitle, subtitle=csubtitle, caption=ftnt) +
+  xlab(label="Week end") +
+  ylab("Percent of ED visits") +
+  # LEGEND ------------------------------------------------------------------
+  guides(colour=guide_legend(title="Condition", position="top")) +
+  # THEME -------------------------------------------------------------------
   theme_minimal() +
-  theme(legend.title=element_text(face="bold"), legend.position="top")
+  theme(legend.title=element_text(face="bold", size=label_size))
 
-# nitpicky edits...
+# example: apply label_size to axis titles and ftnt_size to footnote
 
-ggplot(data=resp_dat_usa, 
-       aes(x=week_end, y=percent_visits, group=condition)) +
+base +
+  # GEOMETRY ----------------------------------------------------------------
   geom_line(aes(colour=condition), linewidth=1.5) +
-  scale_color_manual(values=c(covid="#F06F19", influenza="#0A58D6",rsv="#890664")) +
-  scale_y_continuous(name="Percent of ED visits",
-                     limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
-  scale_x_date(name="Week end", date_breaks = "6 months", date_labels="%b\n%Y", 
-               expand=c(0,0)) +
-  guides(colour = guide_legend(title="")) +
-  ggtitle("Emergency department visits in the <b>United States</b>") + 
+  # SCALES ------------------------------------------------------------------
+  scale_color_manual(values=c("COVID-19"="#C04F15", "Influenza"="#0A58D6","RSV"="#652B5A")) +
+  scale_y_continuous(limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
+  scale_x_date(date_breaks = "6 months", date_labels="%b %Y", expand=c(0,0)) +
+  # TITLES ------------------------------------------------------------------
+  labs(title=ctitle, subtitle=csubtitle, caption=ftnt) +
+  xlab(label="Week end") +
+  ylab("Percent of ED visits") +
+  # LEGEND ------------------------------------------------------------------
+  guides(colour=guide_legend(title="Condition", position="top")) +
+  # THEME -------------------------------------------------------------------
   theme_minimal() +
-  theme(
-    plot.title=element_markdown(),
-    legend.title=element_text(face="bold"), legend.position="top",
-    axis.title.x=element_text(margin=margin(t=10)),
-    axis.title.y=element_text(margin=margin(r=10)))
+  theme(legend.title=element_text(face="bold", size=label_size),
+        axis.title.x=element_text(size=label_size),
+        axis.title.y=element_text(size=label_size),
+        # hjust=0 is left alignment
+        plot.caption=element_text(size=ftnt_size, hjust=0))
 
-# HIGH-LEVEL CUSTOMIZATION -----------------------------------------------------
+# example: add  more white space around axis labels and around plot 
 
-# make more descriptive y-axis title
-# use annotate()
-
-#theme_get()$text$size #get base text size -> 11
-#theme_get()$axis.text #get axis text size -> 11*0.8
-
-ggplot(data=resp_dat_usa, 
-       aes(x=week_end, y=percent_visits, group=condition)) +
+base +
+  # GEOMETRY ----------------------------------------------------------------
   geom_line(aes(colour=condition), linewidth=1.5) +
-  scale_color_manual(values=c(covid="#F06F19", influenza="#0A58D6",rsv="#890664")) +
-  scale_y_continuous(name=NULL, limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
-  scale_x_date(name="Week end", date_breaks = "6 months", date_labels="%b\n%Y", 
-               expand=c(0,0)) +
-  guides(colour = guide_legend(title="")) +
-  annotate("text", x=min(resp_dat_usa$week_end), y=9, label="% of visit", 
-           hjust=0, vjust=0.5,
-           size = (11*0.8)/.pt,
-           color = "grey30") +
-  ggtitle("Emergency department visits in the <b>United States</b>") + 
-  coord_cartesian(clip="off") + #allows drawing outside of plot area
+  # SCALES ------------------------------------------------------------------
+  scale_color_manual(values=c("COVID-19"="#C04F15", "Influenza"="#0A58D6","RSV"="#652B5A")) +
+  scale_y_continuous(limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
+  scale_x_date(date_breaks = "6 months", date_labels="%b %Y", expand=c(0,0)) +
+  # TITLES ------------------------------------------------------------------
+  labs(title=ctitle, subtitle=csubtitle, caption=ftnt) +
+  xlab(label="Week end") +
+  ylab("Percent of ED visits") +
+  # LEGEND ------------------------------------------------------------------
+  guides(colour=guide_legend(title="Condition", position="top")) +
+  # THEME -------------------------------------------------------------------
   theme_minimal() +
-  theme(
-    plot.title=element_markdown(),
-    legend.title=element_text(face="bold"), legend.position="top",
-    axis.title.x=element_text(margin=margin(t=10)))
+  theme(legend.title=element_text(face="bold", size=label_size),
+        axis.title.x=element_text(size=label_size, margin=margin(t=10)),
+        axis.title.y=element_text(size=label_size, margin=margin(r=10)),
+        # hjust=0 is left alignment
+        plot.caption=element_text(size=ftnt_size, hjust=0),
+        plot.margin=margin(t=10, b=10, l=10, r=10))
 
-# add last data point
+# Fix text wrapping: Title, subtitle, footnote ---------------------------------
 
-recent_pt <- resp_dat_usa %>%
+#' str_wrap() helps wrap strings based on a specified character width
+#' examine export to determine where break needs to be
+#' may need to play around with this a bit
+
+ctitle_wrap <- str_wrap(ctitle, width=65)
+csubtitle_wrap <- str_wrap(csubtitle, width=70)
+ftnt_wrap <- str_wrap(ftnt, width=100, whitespace_only = FALSE)
+
+base +
+  # GEOMETRY ----------------------------------------------------------------
+  geom_line(aes(colour=condition), linewidth=1.5) +
+  # SCALES ------------------------------------------------------------------
+  scale_color_manual(values=c("COVID-19"="#C04F15", "Influenza"="#0A58D6","RSV"="#652B5A")) +
+  scale_y_continuous(limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
+  scale_x_date(date_breaks = "6 months", date_labels="%b %Y", expand=c(0,0)) +
+  # TITLES ------------------------------------------------------------------
+  labs(title=ctitle_wrap, subtitle=csubtitle_wrap, caption=ftnt_wrap) +
+  xlab(label="Week end") +
+  ylab("Percent of ED visits") +
+  # LEGEND -------------------------------------------------------------------
+  guides(colour=guide_legend(title="Condition", position="top")) +
+  # THEME --------------------------------------------------------------------
+  theme_minimal() +
+  theme(legend.title=element_text(face="bold", size=label_size),
+        axis.title.x=element_text(size=label_size, margin=margin(t=10)),
+        axis.title.y=element_text(size=label_size, margin=margin(r=10)),
+        # hjust=0 is left alignment
+        plot.caption=element_text(size=ftnt_size, hjust=0),
+        plot.margin=margin(t=10, b=10, l=10, r=10))
+
+# Save chart -------------------------------------------------------------------
+
+ggsave(
+  filename="resp_ed_visit_trend-1.png",
+  path=".\\Charts",
+  width=6,height=5,
+  dpi="print" #save as print quality
+)
+
+# CREATE ADVANCED CHART ========================================================
+
+#' the advanced chart has direct labeling, embedded legend in the title, and
+#' a cleaner y-axis label to get us closer to our final chart
+
+# Add last data point ----------------------------------------------------------
+
+# extend right-hand margin to make room for last point labels
+# allow things to be drawn outside of coordinate system
+
+base +
+  # GEOMETRY ----------------------------------------------------------
+  geom_line(aes(colour=condition), linewidth=1.5) +
+  # SCALES ------------------------------------------------------------
+  scale_color_manual(values=c("COVID-19"="#C04F15", "Influenza"="#0A58D6","RSV"="#652B5A")) +
+  scale_y_continuous(limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
+  scale_x_date(date_breaks = "6 months", date_labels="%b %Y", expand=c(0,0)) +
+  # TITLES -------------------------------------------------------------
+  labs(title=ctitle_wrap, subtitle=csubtitle_wrap, caption=ftnt_wrap) +
+  xlab(label="Week end") +
+  ylab("Percent of ED visits") +
+  # LEGEND -------------------------------------------------------------
+  guides(colour=guide_legend(title="Condition", position="top")) +
+  # COORDINATES --------------------------------------------------------
+  coord_cartesian(clip="off") +
+  # THEME --------------------------------------------------------------
+  theme_minimal() +
+  theme(legend.title=element_text(face="bold", size=label_size),
+        axis.title.x=element_text(size=label_size, margin=margin(t=10)),
+        axis.title.y=element_text(size=label_size, margin=margin(r=10)),
+        plot.caption=element_text(size=ftnt_size, hjust=0),
+        plot.margin=margin(t=10, b=10, l=10, r=75)) #expanded to 75
+
+# create dataset for last point
+
+last_pt <- resp_dat_usa %>%
   group_by(condition) %>%
+  # only keep data for last week_end
   filter(week_end==max(week_end)) %>%
   ungroup()
 
-recent_pt
+last_pt
 
-# chart last data points with  matching aesthetics
+# use last_pt to add layer of points to existing chart
 
-ggplot(data=resp_dat_usa, 
-       aes(x=week_end, y=percent_visits, group=condition)) +
+base +
+  # GEOMETRY ----------------------------------------------------------
   geom_line(aes(colour=condition), linewidth=1.5) +
-  geom_point(data=recent_pt, aes(colour=condition), size=4) +
-  scale_color_manual(values=c(covid="#F06F19", influenza="#0A58D6",rsv="#890664")) +
-  scale_y_continuous(name=NULL, limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
-  scale_x_date(name="Week end", date_breaks = "6 months", date_labels="%b\n%Y", 
-               expand=c(0,0)) +
-  guides(colour = guide_legend(title="")) +
-  annotate("text", x=min(resp_dat_usa$week_end), y=9, label="% of visit", 
-           hjust=0, vjust=0.5,
-           size = (11*0.8)/.pt,
-           color = "grey30") +
-  ggtitle("Emergency department visits in the <b>United States</b>") + 
-  coord_cartesian(clip="off") + #allows drawing outside of plot area
+  geom_point(data=last_pt) +
+  # don't need to specify x and y, since we are using the same ones in base
+  # SCALES ------------------------------------------------------------
+  scale_color_manual(values=c("COVID-19"="#C04F15", "Influenza"="#0A58D6","RSV"="#652B5A")) +
+  scale_y_continuous(limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
+  scale_x_date(date_breaks = "6 months", date_labels="%b %Y", expand=c(0,0)) +
+  # TITLES -------------------------------------------------------------
+  labs(title=ctitle_wrap, subtitle=csubtitle_wrap, caption=ftnt_wrap) +
+  xlab(label="Week end") +
+  ylab("Percent of ED visits") +
+  # LEGEND -------------------------------------------------------------
+  guides(colour=guide_legend(title="Condition", position="top")) +
+  # COORDINATES --------------------------------------------------------
+  coord_cartesian(clip="off") +
+  # THEME --------------------------------------------------------------
   theme_minimal() +
-  theme(
-    plot.title=element_markdown(),
-    legend.title=element_text(face="bold"), legend.position="top",
-    axis.title.x=element_text(margin=margin(t=10)))
+  theme(legend.title=element_text(face="bold", size=label_size),
+        axis.title.x=element_text(size=label_size, margin=margin(t=10)),
+        axis.title.y=element_text(size=label_size, margin=margin(r=10)),
+        plot.caption=element_text(size=ftnt_size, hjust=0),
+        plot.margin=margin(t=10, b=10, l=10, r=75))
 
-# need to expand right-hand margin to fit labels
+# make dots bigger and match color to condition
 
-ggplot(data=resp_dat_usa, 
-       aes(x=week_end, y=percent_visits, group=condition)) +
+base +
+  # GEOMETRY ----------------------------------------------------------
   geom_line(aes(colour=condition), linewidth=1.5) +
-  geom_point(data=recent_pt, aes(colour=condition), size=4) +
-  geom_richtext(data=recent_pt, 
-                aes(label=paste0("<b>", condition, ":</b><br>", round(percent_visits,1), "%"),
-                    colour=condition),
-                hjust=-0.1, fill=NA, label.color=NA) + 
-  scale_color_manual(values=c(covid="#F06F19", influenza="#0A58D6",rsv="#890664")) +
-  scale_y_continuous(name=NULL, limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
-  scale_x_date(name="Week end", date_breaks = "6 months", date_labels="%b\n%Y", 
-               expand=c(0,0)) +
-  guides(colour = guide_legend(title="")) +
-  annotate("text", x=min(resp_dat_usa$week_end), y=9, label="% of visit", 
-           hjust=0, vjust=0.5,
-           size = (11*0.8)/.pt,
-           color = "grey30") +
-  ggtitle("Emergency department visits in the <b>United States</b>") + 
-  coord_cartesian(clip="off") + #allows drawing outside of plot area
+  geom_point(data=last_pt, aes(colour=condition), size=4) +
+  # SCALES ------------------------------------------------------------
+  scale_color_manual(values=c("COVID-19"="#C04F15", "Influenza"="#0A58D6","RSV"="#652B5A")) +
+  scale_y_continuous(limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
+  scale_x_date(date_breaks = "6 months", date_labels="%b %Y", expand=c(0,0)) +
+  # TITLES -------------------------------------------------------------
+  labs(title=ctitle_wrap, subtitle=csubtitle_wrap, caption=ftnt_wrap) +
+  xlab(label="Week end") +
+  ylab("Percent of ED visits") +
+  # LEGEND -------------------------------------------------------------
+  guides(colour=guide_legend(title="Condition", position="top")) +
+  # COORDINATES --------------------------------------------------------
+  coord_cartesian(clip="off") +
+  # THEME --------------------------------------------------------------
   theme_minimal() +
-  theme(
-    plot.title=element_markdown(),
-    plot.margin=margin(t=10, b=10, l=10, r=75),
-    legend.title=element_text(face="bold"), legend.position="top",
-    axis.title.x=element_text(margin=margin(t=10)))
+  theme(legend.title=element_text(face="bold", size=label_size),
+        axis.title.x=element_text(size=label_size, margin=margin(t=10)),
+        axis.title.y=element_text(size=label_size, margin=margin(r=10)),
+        plot.caption=element_text(size=ftnt_size, hjust=0),
+        plot.margin=margin(t=10, b=10, l=10, r=75))
 
-# theme_get()$plot.margin
+# Add last data point labels ---------------------------------------------------
 
-# notice labels overlap
+# map data in last_pt to text using geom_text
 
-recent_pt <- recent_pt %>%
+base +
+  # GEOMETRY ----------------------------------------------------------
+  geom_line(aes(colour=condition), linewidth=1.5) +
+  geom_point(data=last_pt, aes(colour=condition), size=4) +
+  # format label as "condition: %"
+  geom_text(data=last_pt, aes(label=paste0(condition, ": ", 
+                                           round(percent_visits, 1), "%"))) + 
+  # SCALES ------------------------------------------------------------
+  scale_color_manual(values=c("COVID-19"="#C04F15", "Influenza"="#0A58D6","RSV"="#652B5A")) +
+  scale_y_continuous(limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
+  scale_x_date(date_breaks = "6 months", date_labels="%b %Y", expand=c(0,0)) +
+  # TITLES -------------------------------------------------------------
+  labs(title=ctitle_wrap, subtitle=csubtitle_wrap, caption=ftnt_wrap) +
+  xlab(label="Week end") +
+  ylab("Percent of ED visits") +
+  # LEGEND -------------------------------------------------------------
+  guides(colour=guide_legend(title="Condition", position="top")) +
+  # COORDINATES --------------------------------------------------------
+  coord_cartesian(clip="off") +
+  # THEME --------------------------------------------------------------
+  theme_minimal() +
+  theme(legend.title=element_text(face="bold", size=label_size),
+        axis.title.x=element_text(size=label_size, margin=margin(t=10)),
+        axis.title.y=element_text(size=label_size, margin=margin(r=10)),
+        plot.caption=element_text(size=ftnt_size, hjust=0),
+        plot.margin=margin(t=10, b=10, l=10, r=75))
+
+# left-align label and match color to condition
+
+base +
+  # GEOMETRY ----------------------------------------------------------
+  geom_line(aes(colour=condition), linewidth=1.5) +
+  geom_point(data=last_pt, aes(colour=condition), size=4) +
+  # format label as "condition: %"
+  geom_text(data=last_pt, aes(label=paste0(condition, ": ", 
+                                           round(percent_visits, 1), "%"),
+                              colour=condition),
+            hjust=-0.1) + 
+  # SCALES ------------------------------------------------------------
+  scale_color_manual(values=c("COVID-19"="#C04F15", "Influenza"="#0A58D6","RSV"="#652B5A")) +
+  scale_y_continuous(limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
+  scale_x_date(date_breaks = "6 months", date_labels="%b %Y", expand=c(0,0)) +
+  # TITLES -------------------------------------------------------------
+  labs(title=ctitle_wrap, subtitle=csubtitle_wrap, caption=ftnt_wrap) +
+  xlab(label="Week end") +
+  ylab("Percent of ED visits") +
+  # LEGEND -------------------------------------------------------------
+  guides(colour=guide_legend(title="Condition", position="top")) +
+  # COORDINATES --------------------------------------------------------
+  coord_cartesian(clip="off") +
+  # THEME --------------------------------------------------------------
+  theme_minimal() +
+  theme(legend.title=element_text(face="bold", size=label_size),
+        axis.title.x=element_text(size=label_size, margin=margin(t=10)),
+        axis.title.y=element_text(size=label_size, margin=margin(r=10)),
+        plot.caption=element_text(size=ftnt_size, hjust=0),
+        plot.margin=margin(t=10, b=10, l=10, r=75))
+
+#' using geom_richtext() gives you greater control over the formatting of
+#' the label to match our sketch using HTML
+
+base +
+  # GEOMETRY ----------------------------------------------------------
+  geom_line(aes(colour=condition), linewidth=1.5) +
+  geom_point(data=last_pt, aes(colour=condition), size=4) +
+  # format label as "condition: %"
+  geom_richtext(data=last_pt, aes(label=paste0("<b>", condition, "</b>:<br>", 
+                                           round(percent_visits, 1), "%"),
+                              colour=condition),
+            hjust=-0.1, fill=NA, label.color=NA, size=label_size/.pt) + 
+  # SCALES ------------------------------------------------------------
+  scale_color_manual(values=c("COVID-19"="#C04F15", "Influenza"="#0A58D6","RSV"="#652B5A")) +
+  scale_y_continuous(limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
+  scale_x_date(date_breaks = "6 months", date_labels="%b %Y", expand=c(0,0)) +
+  # TITLES -------------------------------------------------------------
+  labs(title=ctitle_wrap, subtitle=csubtitle_wrap, caption=ftnt_wrap) +
+  xlab(label="Week end") +
+  ylab("Percent of ED visits") +
+  # LEGEND -------------------------------------------------------------
+  guides(colour=guide_legend(title="Condition", position="top")) +
+  # COORDINATES --------------------------------------------------------
+  coord_cartesian(clip="off") +
+  # THEME --------------------------------------------------------------
+  theme_minimal() +
+  theme(legend.title=element_text(face="bold", size=label_size),
+        axis.title.x=element_text(size=label_size, margin=margin(t=10)),
+        axis.title.y=element_text(size=label_size, margin=margin(r=10)),
+        plot.caption=element_text(size=ftnt_size, hjust=0),
+        plot.margin=margin(t=10, b=10, l=10, r=75))
+
+# fix overlapping labels for COVID-19 and RSV
+
+last_pt <- last_pt %>%
   mutate(v_adj = case_when(
-    condition == "influenza" ~ percent_visits + 0,
-    condition == "covid" ~ percent_visits + 0.3,
-    condition == "rsv" ~ percent_visits - 0.3
+    condition == "Influenza" ~ percent_visits + 0, #don't adjust
+    condition == "COVID-19" ~ percent_visits + 0.3, #move up 0.3 units
+    condition == "RSV" ~ percent_visits - 0.3 #move down 0.3 units
   ))
 
-ggplot(data=resp_dat_usa, 
-       aes(x=week_end, y=percent_visits, group=condition)) +
+base +
+  # GEOMETRY ----------------------------------------------------------
   geom_line(aes(colour=condition), linewidth=1.5) +
-  geom_point(data=recent_pt, aes(colour=condition), size=4) +
-  geom_richtext(data=recent_pt, 
-                aes(y= v_adj, label=paste0("<b>", condition, ":</b><br>", round(percent_visits,1), "%"),
-                    colour=condition),
-                hjust=-0.1, fill=NA, label.color=NA, size=(11*0.8)/.pt) + 
-  scale_color_manual(values=c(covid="#F06F19", influenza="#0A58D6",rsv="#890664")) +
-  scale_y_continuous(name=NULL, limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
-  scale_x_date(name="Week end", date_breaks = "6 months", date_labels="%b\n%Y", 
-               expand=c(0,0)) +
-  guides(colour = guide_legend(title="")) +
-  annotate("text", x=min(resp_dat_usa$week_end), y=9, label="% of visit", 
-           hjust=0, vjust=0.5,
-           size = (11*0.8)/.pt,
-           color = "grey30") +
-  ggtitle("Emergency department visits in the <b>United States</b>") + 
-  coord_cartesian(clip="off") + #allows drawing outside of plot area
+  geom_point(data=last_pt, aes(colour=condition), size=4) +
+  # format label as "condition: %"
+  geom_richtext(data=last_pt, aes(x=week_end, y=v_adj,  # re-specify x and y
+    label=paste0("<b>", condition, "</b>:<br>", 
+                 round(percent_visits, 1), "%"),
+    colour=condition),
+    hjust=-0.1, fill=NA, label.color=NA, size=label_size/.pt) + 
+  # SCALES ------------------------------------------------------------
+  scale_color_manual(values=c("COVID-19"="#C04F15", "Influenza"="#0A58D6","RSV"="#652B5A")) +
+  scale_y_continuous(limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
+  scale_x_date(date_breaks = "6 months", date_labels="%b %Y", expand=c(0,0)) +
+  # TITLES -------------------------------------------------------------
+  labs(title=ctitle_wrap, subtitle=csubtitle_wrap, caption=ftnt_wrap) +
+  xlab(label="Week end") +
+  ylab("Percent of ED visits") +
+  # LEGEND -------------------------------------------------------------
+  guides(colour=guide_legend(title="Condition", position="top")) +
+  # COORDINATES --------------------------------------------------------
+  coord_cartesian(clip="off") +
+  # THEME --------------------------------------------------------------
   theme_minimal() +
-  theme(
-    plot.title=element_markdown(),
-    plot.margin=margin(t=10, b=10, l=10, r=75),
-    legend.title=element_text(face="bold"), legend.position="top",
-    axis.title.x=element_text(margin=margin(t=10)))
+  theme(legend.title=element_text(face="bold", size=label_size),
+        axis.title.x=element_text(size=label_size, margin=margin(t=10)),
+        axis.title.y=element_text(size=label_size, margin=margin(r=10)),
+        plot.caption=element_text(size=ftnt_size, hjust=0),
+        plot.margin=margin(t=10, b=10, l=10, r=75))
 
-# update title
+# Embed legend to title --------------------------------------------------------
 
-chart_title <- str_wrap("The percentage of emergency department (ED) visits with a discharge 
-diagnosis of <b>influenza \u25AC</b> reached a high of 8.5% during the last week of 2025.", width=65)
-chart_title <- gsub("\n", "<br>", chart_title)
-chart_stitle <- str_wrap("Since then, the percentage has decreased 2.3 percentage points to 
-                          6.3% during Week 1 of 2026.", width=65)
-chart_stitle <- gsub("\n", "<br>", chart_stitle)
+#' to add formatting to our title and subtitle (e.g., bold condition names, apply 
+#' condition colors), we should override theme default of plot.title=element_text() 
+#' to use element_markdown() instead
+#' 
+#' element_markdown() will render HTML/CSS for custom formatting
 
-ggplot(data=resp_dat_usa, 
-       aes(x=week_end, y=percent_visits, group=condition)) +
+# bold condition names and add line symbol
+# line symbol is rendered with \u25AC
+ctitle <- "The percentage of emergency department (ED) visits with a discharge diagnosis of <b>influenza\u25AC</b> reached a high of 8.5% during the last week of 2025 before decreasing to 6.3% during the first week of 2026."
+csubtitle <- "The percentage of ED visits with a discharge diagnosis of <b>COVID-19\u25AC</b> or <b>RSV\u25AC</b> during the first week of 2026 was 0.9% and 0.%, respectively."
+
+ctitle_wrap <- str_wrap(ctitle, width=65)
+csubtitle_wrap <- str_wrap(csubtitle, width=75)
+
+ctitle_wrap <- gsub("\n", "<br>", ctitle_wrap)
+csubtitle_wrap <- gsub("\n", "<br>", csubtitle_wrap)
+
+base +
+  # GEOMETRY ----------------------------------------------------------
   geom_line(aes(colour=condition), linewidth=1.5) +
-  geom_point(data=recent_pt, aes(colour=condition), size=4) +
-  geom_richtext(data=recent_pt, 
-                aes(y= v_adj, label=paste0("<b>", condition, ":</b><br>", round(percent_visits,1), "%"),
-                    colour=condition),
-                hjust=-0.1, fill=NA, label.color=NA, size=(11*0.8)/.pt) + 
-  scale_color_manual(values=c(covid="#F06F19", influenza="#0A58D6",rsv="#890664")) +
-  scale_y_continuous(name=NULL, limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
-  scale_x_date(name="Week end", date_breaks = "6 months", date_labels="%b\n%Y", 
-               expand=c(0,0)) +
-  guides(colour = "none") +
-  annotate("text", x=min(resp_dat_usa$week_end), y=9, label="% of visit", 
-           hjust=0, vjust=0.5,
-           size = (11*0.8)/.pt,
-           color = "grey30") +
-  ggtitle(chart_title, subtitle = chart_stitle) + 
-  coord_cartesian(clip="off") + #allows drawing http://127.0.0.1:40093/graphics/plot_zoom_png?width=566&height=347outside of plot area
+  geom_point(data=last_pt, aes(colour=condition), size=4) +
+  # format label as "condition: %"
+  geom_richtext(data=last_pt, aes(x=week_end, y=v_adj,  # re-specify x and y
+                                  label=paste0("<b>", condition, "</b>:<br>", 
+                                               round(percent_visits, 1), "%"),
+                                  colour=condition),
+                hjust=-0.1, fill=NA, label.color=NA, size=label_size/.pt) + 
+  # SCALES ------------------------------------------------------------
+  scale_color_manual(values=c("COVID-19"="#C04F15", "Influenza"="#0A58D6","RSV"="#652B5A")) +
+  scale_y_continuous(limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
+  scale_x_date(date_breaks = "6 months", date_labels="%b %Y", expand=c(0,0)) +
+  # TITLES -------------------------------------------------------------
+  labs(title=ctitle_wrap, subtitle=csubtitle_wrap, caption=ftnt_wrap) +
+  xlab(label="Week end") +
+  ylab("Percent of ED visits") +
+  # LEGEND -------------------------------------------------------------
+  guides(colour=guide_legend(title="Condition", position="top")) +
+  # COORDINATES --------------------------------------------------------
+  coord_cartesian(clip="off") +
+  # THEME --------------------------------------------------------------
   theme_minimal() +
   theme(
     plot.title=element_markdown(),
     plot.subtitle=element_markdown(),
-    plot.margin=margin(t=10, b=10, l=10, r=75),
-    legend.title=element_text(face="bold"), legend.position="top",
-    axis.title.x=element_text(margin=margin(t=10)))
+    legend.title=element_text(face="bold", size=label_size),
+    axis.title.x=element_text(size=label_size, margin=margin(t=10)),
+    axis.title.y=element_text(size=label_size, margin=margin(r=10)),
+    plot.caption=element_text(size=ftnt_size, hjust=0),
+    plot.margin=margin(t=10, b=10, l=10, r=75))
 
-# add more white space
+# apply condition colors to title -> use <span style='color:...'> for this
+# remove redundant legend
 
-ggplot(data=resp_dat_usa, 
-       aes(x=week_end, y=percent_visits, group=condition)) +
+ctitle_wrap_fmt <- gsub("<b>influenza\u25AC</b>", "<span style='color: #0A58D6;'><b>influenza\u25AC</b></span>", 
+                        ctitle_wrap)
+csubtitle_wrap_fmt <- gsub("<b>COVID-19\u25AC</b>", "<span style='color: #C04F15;'><b>COVID-19\u25AC</b></span>", 
+                      csubtitle_wrap)
+csubtitle_wrap_fmt <- gsub("<b>RSV\u25AC</b>", "<span style='color: #652B5A;'><b>RSV\u25AC</b></span>", 
+                           csubtitle_wrap_fmt)
+
+base +
+  # GEOMETRY ----------------------------------------------------------
   geom_line(aes(colour=condition), linewidth=1.5) +
-  geom_point(data=recent_pt, aes(colour=condition), size=4) +
-  geom_richtext(data=recent_pt, 
-                aes(y= v_adj, label=paste0("<b>", condition, ":</b><br>", round(percent_visits,1), "%"),
-                    colour=condition),
-                hjust=-0.1, fill=NA, label.color=NA, size=(11*0.8)/.pt) + 
-  scale_color_manual(values=c(covid="#F06F19", influenza="#0A58D6",rsv="#890664")) +
-  scale_y_continuous(name=NULL, limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
-  scale_x_date(name="Week end", date_breaks = "6 months", date_labels="%b\n%Y", 
-               expand=c(0,0)) +
-  guides(colour = "none") +
-  annotate("text", x=min(resp_dat_usa$week_end), y=9, label="% of visit", 
-           hjust=0, vjust=0.5,
-           size = (11*0.8)/.pt,
-           color = "grey30") +
-  ggtitle(chart_title, subtitle=chart_stitle) + 
-  coord_cartesian(clip="off") + #allows drawing http://127.0.0.1:40093/graphics/plot_zoom_png?width=566&height=347outside of plot area
+  geom_point(data=last_pt, aes(colour=condition), size=4) +
+  # format label as "condition: %"
+  geom_richtext(data=last_pt, aes(x=week_end, y=v_adj,  # re-specify x and y
+                                  label=paste0("<b>", condition, "</b>:<br>", 
+                                               round(percent_visits, 1), "%"),
+                                  colour=condition),
+                hjust=-0.1, fill=NA, label.color=NA, size=label_size/.pt) + 
+  # SCALES ------------------------------------------------------------
+  scale_color_manual(values=c("COVID-19"="#C04F15", "Influenza"="#0A58D6","RSV"="#652B5A")) +
+  scale_y_continuous(limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
+  scale_x_date(date_breaks = "6 months", date_labels="%b %Y", expand=c(0,0)) +
+  # TITLES -------------------------------------------------------------
+  labs(title=ctitle_wrap_fmt, subtitle=csubtitle_wrap_fmt, caption=ftnt_wrap) +
+  xlab(label="Week end") +
+  ylab("Percent of ED visits") +
+  # LEGEND -------------------------------------------------------------
+  guides(colour="none") + #turn off legend
+  # COORDINATES --------------------------------------------------------
+  coord_cartesian(clip="off") +
+  # THEME --------------------------------------------------------------
   theme_minimal() +
   theme(
-    plot.title=element_markdown(lineheight=1.2),
-    plot.subtitle=element_markdown(lineheight=1.2, margin=margin(b=20)),
-    plot.margin=margin(t=10, b=10, l=10, r=75),
-    legend.title=element_text(face="bold"), legend.position="top",
-    axis.title.x=element_text(margin=margin(t=10)))
+    plot.title=element_markdown(),
+    plot.subtitle=element_markdown(),
+    legend.title=element_text(face="bold", size=label_size),
+    axis.title.x=element_text(size=label_size, margin=margin(t=10)),
+    axis.title.y=element_text(size=label_size, margin=margin(r=10)),
+    plot.caption=element_text(size=ftnt_size, hjust=0),
+    plot.margin=margin(t=10, b=10, l=10, r=75))
 
-# adjust title so there is blue!
+# Add 8.5% marker and data label -----------------------------------------------
 
-chart_title <- str_wrap("The percentage of emergency department (ED) visits with a discharge 
-diagnosis of <b>influenza \u25AC</b> reached a high of 8.5% during the last week of 2025.", width=65)
-chart_title <- gsub("\n", "<br>", chart_title)
-# apply formatting after the fact
-chart_title <- gsub("<b>influenza \u25AC</b>", "<span style='color: #0A58D6;'><b>influenza \u25AC</b></span>", 
-                    chart_title)
+#' for one-off labeling, use annotate()
 
-ggplot(data=resp_dat_usa, 
-       aes(x=week_end, y=percent_visits, group=condition)) +
+# create dataset with highest value for Influenza group
+influ_high <- resp_dat_usa %>% 
+  filter(condition=="Influenza") %>%
+  filter(percent_visits==max(percent_visits))
+
+base +
+  # GEOMETRY ----------------------------------------------------------
   geom_line(aes(colour=condition), linewidth=1.5) +
-  geom_point(data=recent_pt, aes(colour=condition), size=4) +
-  geom_richtext(data=recent_pt, 
-                aes(y= v_adj, label=paste0("<b>", condition, ":</b><br>", round(percent_visits,1), "%"),
-                    colour=condition),
-                hjust=-0.1, fill=NA, label.color=NA, size=(11*0.8)/.pt) + 
-  scale_color_manual(values=c(covid="#F06F19", influenza="#0A58D6",rsv="#890664")) +
-  scale_y_continuous(name=NULL, limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
-  scale_x_date(name="Week end", date_breaks = "6 months", date_labels="%b\n%Y", 
-               expand=c(0,0)) +
-  guides(colour = "none") +
-  annotate("text", x=min(resp_dat_usa$week_end), y=9, label="% of visit", 
-           hjust=0, vjust=0.5,
-           size = (11*0.8)/.pt,
-           color = "grey30") +
-  ggtitle(chart_title, subtitle=chart_stitle) + 
-  coord_cartesian(clip="off") + #allows drawing http://127.0.0.1:40093/graphics/plot_zoom_png?width=566&height=347outside of plot area
+  geom_point(data=last_pt, aes(colour=condition), size=4) +
+  # format label as "condition: %"
+  geom_richtext(data=last_pt, aes(x=week_end, y=v_adj,  # re-specify x and y
+                                  label=paste0("<b>", condition, "</b>:<br>", 
+                                               round(percent_visits, 1), "%"),
+                                  colour=condition),
+                hjust=-0.1, fill=NA, label.color=NA, size=label_size/.pt) + 
+  # SCALES ------------------------------------------------------------
+  scale_color_manual(values=c("COVID-19"="#C04F15", "Influenza"="#0A58D6","RSV"="#652B5A")) +
+  scale_y_continuous(limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
+  scale_x_date(date_breaks = "6 months", date_labels="%b %Y", expand=c(0,0)) +
+  # TITLES -------------------------------------------------------------
+  labs(title=ctitle_wrap_fmt, subtitle=csubtitle_wrap_fmt, caption=ftnt_wrap) +
+  xlab(label="Week end") +
+  ylab("Percent of ED visits") +
+  # LEGEND -------------------------------------------------------------
+  guides(colour="none") + #turn off legend
+  # COORDINATES --------------------------------------------------------
+  coord_cartesian(clip="off") +
+  # ANNOTATION -----------------------------------------------------------
+  annotate("point", x=influ_high$week_end, y=influ_high$percent_visits,
+           size=4) +
+  annotate("text", x=influ_high$week_end, y=influ_high$percent_visits,
+           label=paste0(round(influ_high$percent_visits, 1), "%")) +
+  # THEME --------------------------------------------------------------
   theme_minimal() +
   theme(
-    plot.title=element_markdown(lineheight=1.2),
-    plot.subtitle=element_markdown(lineheight=1.2, margin=margin(b=20)),
-    plot.margin=margin(t=10, b=10, l=10, r=75),
-    legend.title=element_text(face="bold"), legend.position="top",
-    axis.title.x=element_text(margin=margin(t=10)))
+    plot.title=element_markdown(),
+    plot.subtitle=element_markdown(),
+    legend.title=element_text(face="bold", size=label_size),
+    axis.title.x=element_text(size=label_size, margin=margin(t=10)),
+    axis.title.y=element_text(size=label_size, margin=margin(r=10)),
+    plot.caption=element_text(size=ftnt_size, hjust=0),
+    plot.margin=margin(t=10, b=10, l=10, r=75))
 
+# adjust position, color, and size of label
 
-# in this format, faceting is really easy to apply to separate out
-# into a panel chart
-
-chart_title <- str_wrap("The percentage of emergency department (ED) visits with a discharge 
-diagnosis of <b>influenza \u25AC</b> reached a high of 8.5% during the last week of 2025.", width=65)
-chart_title <- gsub("\n", "<br>", chart_title)
-# apply formatting after the fact
-chart_title <- gsub("<b>influenza \u25AC</b>", "<span style='color: #0A58D6;'><b>influenza \u25AC</b></span>", 
-                    chart_title)
-
-ggplot(data=resp_dat_usa, 
-       aes(x=week_end, y=percent_visits, group=condition)) +
+base +
+  # GEOMETRY ----------------------------------------------------------
   geom_line(aes(colour=condition), linewidth=1.5) +
-  geom_point(data=recent_pt, aes(colour=condition), size=4) +
-  geom_richtext(data=recent_pt, 
-                aes(y= v_adj, label=paste0("<b>", condition, ":</b><br>", round(percent_visits,1), "%"),
-                    colour=condition),
-                hjust=-0.1, fill=NA, label.color=NA, size=(11*0.8)/.pt) + 
-  scale_color_manual(values=c(covid="#F06F19", influenza="#0A58D6",rsv="#890664")) +
-  scale_y_continuous(name=NULL, limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
-  scale_x_date(name="Week end", date_breaks = "6 months", date_labels="%b\n%Y", 
-               expand=c(0,0)) +
-  guides(colour = "none") +
-  annotate("text", x=min(resp_dat_usa$week_end), y=9, label="% of visit", 
-           hjust=0, vjust=0.5,
-           size = (11*0.8)/.pt,
-           color = "grey30") +
-  ggtitle(chart_title, subtitle=chart_stitle) + 
-  coord_cartesian(clip="off") + #allows drawing http://127.0.0.1:40093/graphics/plot_zoom_png?width=566&height=347outside of plot area
-  facet_grid(~condition) + 
+  geom_point(data=last_pt, aes(colour=condition), size=4) +
+  # format label as "condition: %"
+  geom_richtext(data=last_pt, aes(x=week_end, y=v_adj,  # re-specify x and y
+                                  label=paste0("<b>", condition, "</b>:<br>", 
+                                               round(percent_visits, 1), "%"),
+                                  colour=condition),
+                hjust=-0.1, fill=NA, label.color=NA, size=label_size/.pt) + 
+  # SCALES ------------------------------------------------------------
+  scale_color_manual(values=c("COVID-19"="#C04F15", "Influenza"="#0A58D6","RSV"="#652B5A")) +
+  scale_y_continuous(limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
+  scale_x_date(date_breaks = "6 months", date_labels="%b %Y", expand=c(0,0)) +
+  # TITLES -------------------------------------------------------------
+  labs(title=ctitle_wrap_fmt, subtitle=csubtitle_wrap_fmt, caption=ftnt_wrap) +
+  xlab(label="Week end") +
+  ylab("Percent of ED visits") +
+  # LEGEND -------------------------------------------------------------
+  guides(colour="none") + #turn off legend
+  # COORDINATES --------------------------------------------------------
+  coord_cartesian(clip="off") +
+  # ANNOTATION -----------------------------------------------------------
+  annotate("point", x=influ_high$week_end, y=influ_high$percent_visits,
+         size=4, colour="#0A58D6") +
+  annotate("text", x=influ_high$week_end, y=influ_high$percent_visits,
+           label=paste0(round(influ_high$percent_visits, 1), "%"),
+           colour="#0A58D6", size=label_size/.pt, hjust=1.25) +
+    # THEME --------------------------------------------------------------
   theme_minimal() +
   theme(
-    plot.title=element_markdown(lineheight=1.2),
-    plot.subtitle=element_markdown(lineheight=1.2, margin=margin(b=20)),
-    plot.margin=margin(t=10, b=10, l=10, r=75),
-    legend.title=element_text(face="bold"), legend.position="top",
-    axis.title.x=element_text(margin=margin(t=10)))
+    plot.title=element_markdown(),
+    plot.subtitle=element_markdown(),
+    legend.title=element_text(face="bold", size=label_size),
+    axis.title.x=element_text(size=label_size, margin=margin(t=10)),
+    axis.title.y=element_text(size=label_size, margin=margin(r=10)),
+    plot.caption=element_text(size=ftnt_size, hjust=0),
+    plot.margin=margin(t=10, b=10, l=10, r=75))
 
-# need to adjust spacing
+# Re-format with more descriptive y-axis label ---------------------------------
 
-ggplot(data=resp_dat_usa, 
-       aes(x=week_end, y=percent_visits, group=condition)) +
+base +
+  # GEOMETRY ----------------------------------------------------------
   geom_line(aes(colour=condition), linewidth=1.5) +
-  geom_point(data=recent_pt, aes(colour=condition), size=4) +
-  geom_richtext(data=recent_pt, 
-                aes(y= v_adj, label=paste0("<b>", condition, ":</b><br>", round(percent_visits,1), "%"),
-                    colour=condition),
-                hjust=-0.1, fill=NA, label.color=NA, size=(11*0.8)/.pt) + 
-  scale_color_manual(values=c(covid="#F06F19", influenza="#0A58D6",rsv="#890664")) +
-  scale_y_continuous(name=NULL, limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
-  scale_x_date(name="Week end", date_breaks = "6 months", date_labels="%b\n%Y", 
-               expand=c(0,0)) +
-  guides(colour = "none") +
-  annotate("text", x=min(resp_dat_usa$week_end), y=9, label="% of visit", 
-           hjust=0, vjust=0.5,
-           size = (11*0.8)/.pt,
-           color = "grey30") +
-  ggtitle(chart_title, subtitle=chart_stitle) + 
-  coord_cartesian(clip="off") + #allows drawing http://127.0.0.1:40093/graphics/plot_zoom_png?width=566&height=347outside of plot area
-  facet_grid(~condition) + 
+  geom_point(data=last_pt, aes(colour=condition), size=4) +
+  # format label as "condition: %"
+  geom_richtext(data=last_pt, aes(x=week_end, y=v_adj,  # re-specify x and y
+                                  label=paste0("<b>", condition, "</b>:<br>", 
+                                               round(percent_visits, 1), "%"),
+                                  colour=condition),
+                hjust=-0.1, fill=NA, label.color=NA, size=label_size/.pt) + 
+  # SCALES ------------------------------------------------------------
+  scale_color_manual(values=c("COVID-19"="#C04F15", "Influenza"="#0A58D6","RSV"="#652B5A")) +
+  scale_y_continuous(limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
+  scale_x_date(date_breaks = "6 months", date_labels="%b %Y", expand=c(0,0)) +
+  # TITLES -------------------------------------------------------------
+  labs(title=ctitle_wrap_fmt, subtitle=csubtitle_wrap_fmt, caption=ftnt_wrap) +
+  xlab(label="Week end") +
+  ylab("Percent of ED visits") +
+  # LEGEND -------------------------------------------------------------
+  guides(colour="none") + #turn off legend
+  # COORDINATES --------------------------------------------------------
+  coord_cartesian(clip="off") +
+  # ANNOTATION ---------------------------------------------------------
+  annotate("point", x=influ_high$week_end, y=influ_high$percent_visits,
+         size=4, colour="#0A58D6") +
+  annotate("text", x=influ_high$week_end, y=influ_high$percent_visits,
+           label=paste0(round(influ_high$percent_visits, 1), "%"),
+           colour="#0A58D6", size=label_size/.pt, hjust=1.25) +
+  # x: first week_end date
+  # y: the y-axis scale max, which is 9
+  annotate("text", x=min(resp_dat_usa$week_end), y=9, label="% of visit") +
+  # THEME --------------------------------------------------------------
   theme_minimal() +
   theme(
-    plot.title=element_markdown(lineheight=1.2),
-    plot.subtitle=element_markdown(lineheight=1.2, margin=margin(b=20)),
+    plot.title=element_markdown(),
+    plot.subtitle=element_markdown(),
+    legend.title=element_text(face="bold", size=label_size),
+    axis.title.x=element_text(size=label_size, margin=margin(t=10)),
+    axis.title.y=element_text(size=label_size, margin=margin(r=10)),
+    plot.caption=element_text(size=ftnt_size, hjust=0),
+    plot.margin=margin(t=10, b=10, l=10, r=75))
+
+# adjust position, size, and color of label
+
+base +
+  # GEOMETRY ----------------------------------------------------------
+  geom_line(aes(colour=condition), linewidth=1.5) +
+  geom_point(data=last_pt, aes(colour=condition), size=4) +
+  # format label as "condition: %"
+  geom_richtext(data=last_pt, aes(x=week_end, y=v_adj,  # re-specify x and y
+                                  label=paste0("<b>", condition, "</b>:<br>", 
+                                               round(percent_visits, 1), "%"),
+                                  colour=condition),
+                hjust=-0.1, fill=NA, label.color=NA, size=label_size/.pt) + 
+  # SCALES ------------------------------------------------------------
+  scale_color_manual(values=c("COVID-19"="#C04F15", "Influenza"="#0A58D6","RSV"="#652B5A")) +
+  scale_y_continuous(limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
+  scale_x_date(date_breaks = "6 months", date_labels="%b %Y", expand=c(0,0)) +
+  # TITLES -------------------------------------------------------------
+  labs(title=ctitle_wrap_fmt, subtitle=csubtitle_wrap_fmt, caption=ftnt_wrap) +
+  xlab(label="Week end") +
+  ylab("Percent of ED visits") +
+  # LEGEND -------------------------------------------------------------
+  guides(colour="none") + #turn off legend
+  # COORDINATES --------------------------------------------------------
+  coord_cartesian(clip="off") +
+  # ANNOTATION ---------------------------------------------------------
+  annotate("point", x=influ_high$week_end, y=influ_high$percent_visits,
+         size=4, colour="#0A58D6") +
+  annotate("text", x=influ_high$week_end, y=influ_high$percent_visits,
+           label=paste0(round(influ_high$percent_visits, 1), "%"),
+           colour="#0A58D6", size=label_size/.pt, hjust=1.25) +
+  annotate("text", x=min(resp_dat_usa$week_end), y=9, label="% of visit",
+           hjust=0, vjust=0.5, size=label_size/.pt, color="grey30") +
+  # THEME --------------------------------------------------------------
+  theme_minimal() +
+  theme(
+    plot.title=element_markdown(),
+    plot.subtitle=element_markdown(),
+    legend.title=element_text(face="bold", size=label_size),
+    axis.title.x=element_text(size=label_size, margin=margin(t=10)),
+    axis.title.y=element_text(size=label_size, margin=margin(r=10)),
+    plot.caption=element_text(size=ftnt_size, hjust=0),
+    plot.margin=margin(t=10, b=10, l=10, r=75))
+
+# Minor design updates ---------------------------------------------------------
+
+base +
+  # GEOMETRY ----------------------------------------------------------
+  geom_line(aes(colour=condition), linewidth=1.5) +
+  geom_point(data=last_pt, aes(colour=condition), size=4) +
+  # format label as "condition: %"
+  geom_richtext(data=last_pt, aes(x=week_end, y=v_adj,  # re-specify x and y
+                                  label=paste0("<b>", condition, "</b>:<br>", 
+                                               round(percent_visits, 1), "%"),
+                                  colour=condition),
+                hjust=-0.1, fill=NA, label.color=NA, size=label_size/.pt) + 
+  # SCALES ------------------------------------------------------------
+  scale_color_manual(values=c("COVID-19"="#C04F15", "Influenza"="#0A58D6","RSV"="#652B5A")) +
+  scale_y_continuous(limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
+  scale_x_date(date_breaks = "6 months", date_labels="%b %Y", expand=c(0,0)) +
+  # TITLES -------------------------------------------------------------
+  labs(title=ctitle_wrap_fmt, subtitle=csubtitle_wrap_fmt, caption=ftnt_wrap) +
+  xlab(label="Week end") +
+  ylab("Percent of ED visits") +
+  # LEGEND -------------------------------------------------------------
+  guides(colour="none") + #turn off legend
+  # COORDINATES --------------------------------------------------------
+  coord_cartesian(clip="off") +
+  # ANNOTATION ---------------------------------------------------------
+  annotate("point", x=influ_high$week_end, y=influ_high$percent_visits,
+         size=4, colour="#0A58D6") +
+  annotate("text", x=influ_high$week_end, y=influ_high$percent_visits,
+           label=paste0(round(influ_high$percent_visits, 1), "%"),
+           colour="#0A58D6", size=label_size/.pt, hjust=1.25) +
+  annotate("text", x=min(resp_dat_usa$week_end), y=9, label="% of visit",
+         hjust=0, vjust=0.5, size=label_size/.pt, color="grey30") +
+  # THEME --------------------------------------------------------------
+  theme_minimal() +
+  theme(
+    plot.title=element_markdown(face="bold", lineheight=1.1, size=text_size*1.1),
+    plot.subtitle=element_markdown(margin=margin(b=20), lineheight=1.1, size=text_size*0.9),
+    legend.title=element_text(face="bold", size=label_size),
+    axis.title.x=element_text(size=label_size, margin=margin(t=10)),
+    axis.title.y=element_text(size=label_size, margin=margin(r=10)),
+    plot.caption=element_text(size=ftnt_size, hjust=0),
+    plot.margin=margin(t=10, b=10, l=10, r=75))
+
+# Save chart -------------------------------------------------------------------
+
+ggsave(
+  filename="resp_ed_visit_trend-2.png",
+  path=".\\Charts",
+  width=6,height=5,
+  dpi="print" #save as print quality
+)
+
+# SPLITTING INTO MULTIPLE PANELS ===============================================
+
+# facet_grid() to easily split into separate panels!
+
+base +
+  # GEOMETRY ----------------------------------------------------------
+  geom_line(aes(colour=condition), linewidth=1.5) +
+  geom_point(data=last_pt, aes(colour=condition), size=4) +
+  # format label as "condition: %"
+  geom_richtext(data=last_pt, aes(x=week_end, y=v_adj,  # re-specify x and y
+                                  label=paste0("<b>", condition, "</b>:<br>", 
+                                               round(percent_visits, 1), "%"),
+                                  colour=condition),
+                hjust=-0.1, fill=NA, label.color=NA, size=label_size/.pt) + 
+  # SCALES ------------------------------------------------------------
+  scale_color_manual(values=c("COVID-19"="#C04F15", "Influenza"="#0A58D6","RSV"="#652B5A")) +
+  scale_y_continuous(limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
+  scale_x_date(date_breaks = "6 months", date_labels="%b %Y", expand=c(0,0)) +
+  # TITLES -------------------------------------------------------------
+  labs(title=ctitle_wrap_fmt, subtitle=csubtitle_wrap_fmt, caption=ftnt_wrap) +
+  xlab(label="Week end") +
+  ylab("Percent of ED visits") +
+  # LEGEND -------------------------------------------------------------
+  guides(colour="none") + #turn off legend
+  # COORDINATES --------------------------------------------------------
+  coord_cartesian(clip="off") +
+  # ANNOTATION ---------------------------------------------------------
+  annotate("point", x=influ_high$week_end, y=influ_high$percent_visits,
+         size=4, colour="#0A58D6") +
+  annotate("text", x=influ_high$week_end, y=influ_high$percent_visits,
+           label=paste0(round(influ_high$percent_visits, 1), "%"),
+           colour="#0A58D6", size=label_size/.pt, hjust=1.25) +
+  annotate("text", x=min(resp_dat_usa$week_end), y=9, label="% of visit",
+         hjust=0, vjust=0.5, size=label_size/.pt, color="grey30") +
+  # FACET --------------------------------------------------------------
+  facet_grid(~condition) +
+  # THEME --------------------------------------------------------------
+  theme_minimal() +
+  theme(
+    plot.title=element_markdown(face="bold", lineheight=1.1, size=text_size*1.1),
+    plot.subtitle=element_markdown(margin=margin(b=20), lineheight=1.1, size=text_size*0.9),
+    legend.title=element_text(face="bold", size=label_size),
+    axis.title.x=element_text(size=label_size, margin=margin(t=10)),
+    axis.title.y=element_text(size=label_size, margin=margin(r=10)),
+    plot.caption=element_text(size=ftnt_size, hjust=0),
+    plot.margin=margin(t=10, b=10, l=10, r=75))
+
+#'increase space between panels to prevent overlap of labels
+
+base +
+  # GEOMETRY ----------------------------------------------------------
+  geom_line(aes(colour=condition), linewidth=1.5) +
+  geom_point(data=last_pt, aes(colour=condition), size=4) +
+  # format label as "condition: %"
+  geom_richtext(data=last_pt, aes(x=week_end, y=v_adj,  # re-specify x and y
+                                  label=paste0("<b>", condition, "</b>:<br>", 
+                                               round(percent_visits, 1), "%"),
+                                  colour=condition),
+                hjust=-0.1, fill=NA, label.color=NA, size=label_size/.pt) + 
+  # SCALES ------------------------------------------------------------
+  scale_color_manual(values=c("COVID-19"="#C04F15", "Influenza"="#0A58D6","RSV"="#652B5A")) +
+  scale_y_continuous(limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
+  scale_x_date(date_breaks = "6 months", date_labels="%b %Y", expand=c(0,0)) +
+  # TITLES -------------------------------------------------------------
+  labs(title=ctitle_wrap_fmt, subtitle=csubtitle_wrap_fmt, caption=ftnt_wrap) +
+  xlab(label="Week end") +
+  ylab("Percent of ED visits") +
+  # LEGEND -------------------------------------------------------------
+  guides(colour="none") + #turn off legend
+  # COORDINATES --------------------------------------------------------
+  coord_cartesian(clip="off") +
+  # ANNOTATION ---------------------------------------------------------
+  annotate("point", x=influ_high$week_end, y=influ_high$percent_visits,
+         size=4, colour="#0A58D6") +
+  annotate("text", x=influ_high$week_end, y=influ_high$percent_visits,
+           label=paste0(round(influ_high$percent_visits, 1), "%"),
+           colour="#0A58D6", size=label_size/.pt, hjust=1.25) +
+  annotate("text", x=min(resp_dat_usa$week_end), y=9, label="% of visit",
+           hjust=0, vjust=0.5, size=label_size/.pt, color="grey30") +
+  # FACET --------------------------------------------------------------
+  facet_grid(~condition) +
+  # THEME --------------------------------------------------------------
+  theme_minimal() +
+  theme(
+    plot.title=element_markdown(face="bold", lineheight=1.1, size=text_size*1.1),
+    plot.subtitle=element_markdown(margin=margin(b=20), lineheight=1.1, size=text_size*0.9),
+    legend.title=element_text(face="bold", size=label_size),
+    axis.title.x=element_text(size=label_size, margin=margin(t=10)),
+    axis.title.y=element_text(size=label_size, margin=margin(r=10)),
+    plot.caption=element_text(size=ftnt_size, hjust=0),
     plot.margin=margin(t=10, b=10, l=10, r=75),
-    legend.title=element_text(face="bold"), legend.position="top",
-    axis.title.x=element_text(margin=margin(t=10)), 
-    panel.spacing=unit(1, "lines"))
+    panel.spacing=unit(1.25, "lines"))
 
-# fix annotation being repeated
+# remove condition from labels, since panel is labeled
+# adjust position above point by nudging 
 
-anno_y <- data.frame(
+base +
+  # GEOMETRY ----------------------------------------------------------
+  geom_line(aes(colour=condition), linewidth=1.5) +
+  geom_point(data=last_pt, aes(colour=condition), size=4) +
+  # format label as "condition: %"
+  geom_richtext(data=last_pt, aes(label=paste0(round(percent_visits, 1), "%"),
+                                  colour=condition),
+                hjust=0.5, nudge_y=0.9, 
+                # add a background color and outline so label is easy to see
+                fill="#FFFFFF", size=label_size/.pt) + 
+  # SCALES ------------------------------------------------------------
+  scale_color_manual(values=c("COVID-19"="#C04F15", "Influenza"="#0A58D6","RSV"="#652B5A")) +
+  scale_y_continuous(limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
+  scale_x_date(date_breaks = "6 months", date_labels="%b %Y", expand=c(0,0)) +
+  # TITLES -------------------------------------------------------------
+  labs(title=ctitle_wrap_fmt, subtitle=csubtitle_wrap_fmt, caption=ftnt_wrap) +
+  xlab(label="Week end") +
+  ylab("Percent of ED visits") +
+  # LEGEND -------------------------------------------------------------
+  guides(colour="none") + #turn off legend
+  # COORDINATES --------------------------------------------------------
+  coord_cartesian(clip="off") +
+  # ANNOTATION ---------------------------------------------------------
+  annotate("point", x=influ_high$week_end, y=influ_high$percent_visits,
+         size=4, colour="#0A58D6") +
+  annotate("text", x=influ_high$week_end, y=influ_high$percent_visits,
+           label=paste0(round(influ_high$percent_visits, 1), "%"),
+           colour="#0A58D6", size=label_size/.pt, hjust=1.25) +
+  annotate("text", x=min(resp_dat_usa$week_end), y=9, label="% of visit",
+           hjust=0, vjust=0.5, size=label_size/.pt, color="grey30") +
+  # FACET --------------------------------------------------------------
+  facet_grid(~condition) +
+  # THEME --------------------------------------------------------------
+  theme_minimal() +
+  theme(
+    plot.title=element_markdown(face="bold", lineheight=1.1, size=text_size*1.1),
+    plot.subtitle=element_markdown(margin=margin(b=20), lineheight=1.1, size=text_size*0.9),
+    legend.title=element_text(face="bold", size=label_size),
+    axis.title.x=element_text(size=label_size, margin=margin(t=10)),
+    axis.title.y=element_text(size=label_size, margin=margin(r=10)),
+    plot.caption=element_text(size=ftnt_size, hjust=0),
+    plot.margin=margin(t=10, b=10, l=10, r=20),
+    panel.spacing=unit(1.25, "lines"))
+
+# update x-axis labeling to avoid overlap
+
+base +
+  # GEOMETRY ----------------------------------------------------------
+  geom_line(aes(colour=condition), linewidth=1.5) +
+  geom_point(data=last_pt, aes(colour=condition), size=4) +
+  # format label as "condition: %"
+  geom_richtext(data=last_pt, aes(label=paste0(round(percent_visits, 1), "%"),
+                                  colour=condition),
+                hjust=0.5, nudge_y=0.9, 
+                fill="#FFFFFF", size=label_size/.pt) + 
+  # SCALES ------------------------------------------------------------
+  scale_color_manual(values=c("COVID-19"="#C04F15", "Influenza"="#0A58D6","RSV"="#652B5A")) +
+  scale_y_continuous(limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
+  scale_x_date(date_breaks = "12 months", date_labels="%b\n%Y", expand=c(0,0)) +
+  # TITLES -------------------------------------------------------------
+  labs(title=ctitle_wrap_fmt, subtitle=csubtitle_wrap_fmt, caption=ftnt_wrap) +
+  xlab(label="Week end") +
+  ylab("Percent of ED visits") +
+  # LEGEND -------------------------------------------------------------
+  guides(colour="none") + #turn off legend
+  # COORDINATES --------------------------------------------------------
+  coord_cartesian(clip="off") +
+  # FACET --------------------------------------------------------------
+  facet_grid(~condition) +
+  # ANNOTATION ---------------------------------------------------------
+  annotate("point", x=influ_high$week_end, y=influ_high$percent_visits,
+         size=4, colour="#0A58D6") +
+  annotate("text", x=influ_high$week_end, y=influ_high$percent_visits,
+           label=paste0(round(influ_high$percent_visits, 1), "%"),
+           colour="#0A58D6", size=label_size/.pt, hjust=1.25) +
+  annotate("text", x=min(resp_dat_usa$week_end), y=9, label="% of visit",
+           hjust=0, vjust=0.5, size=label_size/.pt, color="grey30") +
+  # THEME --------------------------------------------------------------
+  theme_minimal() +
+  theme(
+    plot.title=element_markdown(face="bold", lineheight=1.1, size=text_size*1.1),
+    plot.subtitle=element_markdown(margin=margin(b=20), lineheight=1.1, size=text_size*0.9),
+    legend.title=element_text(face="bold", size=label_size),
+    axis.title.x=element_text(size=label_size, margin=margin(t=10)),
+    axis.title.y=element_text(size=label_size, margin=margin(r=10)),
+    plot.caption=element_text(size=ftnt_size, hjust=0),
+    plot.margin=margin(t=15, b=10, l=10, r=20),
+    panel.spacing=unit(1.25, "lines"))
+
+# remove redundant annotations by using geom_text
+# annotations are repeated across panels
+
+# create dataset to use for y-axis label on first panel only
+anno_y_axis <- data.frame(
+  # first panel
   condition=unique(resp_dat_usa$condition)[1],
   x = min(resp_dat_usa$week_end),
   y = 9,
   label = "% of visit")
 
-ggplot(data=resp_dat_usa, 
-       aes(x=week_end, y=percent_visits, group=condition)) +
+base +
+  # GEOMETRY ----------------------------------------------------------
   geom_line(aes(colour=condition), linewidth=1.5) +
-  geom_point(data=recent_pt, aes(colour=condition), size=4) +
-  geom_richtext(data=recent_pt, 
-                aes(y= v_adj, label=paste0("<b>", condition, ":</b><br>", round(percent_visits,1), "%"),
-                    colour=condition),
-                hjust=-0.1, fill=NA, label.color=NA, size=(11*0.8)/.pt) + 
-  scale_color_manual(values=c(covid="#F06F19", influenza="#0A58D6",rsv="#890664")) +
-  scale_y_continuous(name=NULL, limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
-  scale_x_date(name="Week end", date_breaks = "6 months", date_labels="%b\n%Y", 
-               expand=c(0,0)) +
-  guides(colour = "none") +
-  geom_text(data = anno_y,
-            aes(x=x, y=y, label=label),
-            hjust=0, vjust=0.5,
-            size = (11*0.8)/.pt,
-            color = "grey30") +
-  ggtitle(chart_title, subtitle=chart_stitle) + 
-  coord_cartesian(clip="off") + #allows drawing http://127.0.0.1:40093/graphics/plot_zoom_png?width=566&height=347outside of plot area
-  facet_grid(~condition) + 
+  geom_point(data=last_pt, aes(colour=condition), size=4) +
+  # format label as "condition: %"
+  geom_richtext(data=last_pt, aes(label=paste0(round(percent_visits, 1), "%"),
+                                  colour=condition),
+                hjust=0.5, nudge_y=0.9, 
+                fill="#FFFFFF", size=label_size/.pt) + 
+  # SCALES ------------------------------------------------------------
+  scale_color_manual(values=c("COVID-19"="#C04F15", "Influenza"="#0A58D6","RSV"="#652B5A")) +
+  scale_y_continuous(limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
+  scale_x_date(date_breaks = "12 months", date_labels="%b\n%Y", expand=c(0,0)) +
+  # TITLES -------------------------------------------------------------
+  labs(title=ctitle_wrap_fmt, subtitle=csubtitle_wrap_fmt, caption=ftnt_wrap) +
+  xlab(label="Week end") +
+  ylab("Percent of ED visits") +
+  # LEGEND -------------------------------------------------------------
+  guides(colour="none") + #turn off legend
+  # COORDINATES --------------------------------------------------------
+  coord_cartesian(clip="off") +
+  # FACET --------------------------------------------------------------
+  facet_grid(~condition) +
+  # ANNOTATION ---------------------------------------------------------
+  geom_text(data=anno_y_axis, aes(x=x, y=y, label=label),
+            hjust=0, vjust=0.5, size=label_size/.pt, color="grey30") +
+  geom_point(data=influ_high, aes(x=week_end, y=percent_visits, colour=condition), 
+             size=4) +
+  geom_text(data=influ_high, aes(x=week_end, y=percent_visits, colour=condition,
+            label=paste0(round(percent_visits, 1), "%")),
+            size=label_size/.pt, hjust=1.25) +
+  # THEME --------------------------------------------------------------
   theme_minimal() +
   theme(
-    plot.title=element_markdown(lineheight=1.2),
-    plot.subtitle=element_markdown(lineheight=1.2, margin=margin(b=20)),
-    plot.margin=margin(t=10, b=10, l=10, r=75),
-    legend.title=element_text(face="bold"), legend.position="top",
-    axis.title.x=element_text(margin=margin(t=10)), 
-    panel.spacing=unit(1, "lines"))
+    plot.title=element_markdown(face="bold", lineheight=1.1, size=text_size*1.1),
+    plot.subtitle=element_markdown(margin=margin(b=20), lineheight=1.1, size=text_size*0.9),
+    legend.title=element_text(face="bold", size=label_size),
+    axis.title.x=element_text(size=label_size, margin=margin(t=10)),
+    axis.title.y=element_text(size=label_size, margin=margin(r=10)),
+    plot.caption=element_text(size=ftnt_size, hjust=0),
+    plot.margin=margin(t=15, b=10, l=10, r=20),
+    panel.spacing=unit(1.25, "lines"))
 
-# need to fix labels. Since there are panel titles, we don't need to repeat the group
+# Minor design updates ---------------------------------------------------------
 
-ggplot(data=resp_dat_usa, 
-       aes(x=week_end, y=percent_visits, group=condition)) +
+base +
+  # GEOMETRY ----------------------------------------------------------
   geom_line(aes(colour=condition), linewidth=1.5) +
-  geom_point(data=recent_pt, aes(colour=condition), size=4) +
-  geom_richtext(data=recent_pt, 
-                aes(label=paste0(round(percent_visits,1), "%"),
-                    colour=condition),
-                hjust=0.5, vjust=0, nudge_y=0.3,
-                fill="#FFFFFF", label.color=NA, size=(11*0.8)/.pt) + 
-  scale_color_manual(values=c(covid="#F06F19", influenza="#0A58D6",rsv="#890664")) +
-  scale_y_continuous(name=NULL, limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
-  scale_x_date(name="Week end", date_breaks = "6 months", date_labels="%b\n%Y", 
-               expand=c(0,0)) +
-  guides(colour = "none") +
-  geom_text(data = anno_y,
-            aes(x=x, y=y, label=label),
-            hjust=0, vjust=0.5,
-            size = (11*0.8)/.pt,
-            color = "grey30") +
-  ggtitle(chart_title, subtitle=chart_stitle) + 
-  coord_cartesian(clip="off") + #allows drawing http://127.0.0.1:40093/graphics/plot_zoom_png?width=566&height=347outside of plot area
-  facet_grid(~condition) + 
+  geom_point(data=last_pt, aes(colour=condition), size=4) +
+  # format label as "condition: %"
+  geom_richtext(data=last_pt, aes(label=paste0(round(percent_visits, 1), "%"),
+                                  colour=condition),
+                hjust=0.5, nudge_y=0.9, 
+                fill="#FFFFFF", size=label_size/.pt) + 
+  # SCALES ------------------------------------------------------------
+  scale_color_manual(values=c("COVID-19"="#C04F15", "Influenza"="#0A58D6","RSV"="#652B5A")) +
+  scale_y_continuous(limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
+  scale_x_date(date_breaks = "12 months", date_labels="%b\n%Y", expand=c(0,0)) +
+  # TITLES -------------------------------------------------------------
+  labs(title=ctitle_wrap_fmt, subtitle=csubtitle_wrap_fmt, caption=ftnt_wrap) +
+  xlab(label="Week end") +
+  ylab("Percent of ED visits") +
+  # LEGEND -------------------------------------------------------------
+  guides(colour="none") + #turn off legend
+  # COORDINATES --------------------------------------------------------
+  coord_cartesian(clip="off") +
+  # FACET --------------------------------------------------------------
+  facet_grid(~condition) +
+  # ANNOTATION ---------------------------------------------------------
+  geom_text(data=anno_y_axis, aes(x=x, y=y, label=label),
+          hjust=0, vjust=0.5, size=label_size/.pt, color="grey30") +
+  geom_point(data=influ_high, aes(x=week_end, y=percent_visits, colour=condition), 
+             size=4) +
+  geom_text(data=influ_high, aes(x=week_end, y=percent_visits, colour=condition,
+                                 label=paste0(round(percent_visits, 1), "%")),
+            size=label_size/.pt, hjust=1.25) +
+  # THEME --------------------------------------------------------------
   theme_minimal() +
   theme(
-    plot.title=element_markdown(lineheight=1.2),
-    plot.subtitle=element_markdown(lineheight=1.2, margin=margin(b=20)),
-    plot.margin=margin(t=10, b=10, l=10, r=75),
-    legend.title=element_text(face="bold"), legend.position="top",
-    axis.title.x=element_text(margin=margin(t=10)), 
-    panel.spacing=unit(1, "lines"))
+    plot.title=element_markdown(face="bold", lineheight=1.1, size=text_size*1.1),
+    plot.subtitle=element_markdown(margin=margin(b=20), lineheight=1.1, size=text_size*0.9),
+    legend.title=element_text(face="bold", size=label_size),
+    axis.title.x=element_text(size=label_size, margin=margin(t=10)),
+    axis.title.y=element_text(size=label_size, margin=margin(r=10)),
+    plot.caption=element_text(size=ftnt_size, hjust=0),
+    plot.margin=margin(t=15, b=10, l=10, r=20),
+    panel.spacing=unit(1.25, "lines"), 
+    strip.text=element_text(face="bold", margin=margin(b=10)))
 
-# now let's format the panels a bit more
+# Save chart -------------------------------------------------------------------
 
-ggplot(data=resp_dat_usa, 
-       aes(x=week_end, y=percent_visits, group=condition)) +
-  geom_line(aes(colour=condition), linewidth=1.5) +
-  geom_point(data=recent_pt, aes(colour=condition), size=4) +
-  geom_richtext(data=recent_pt, 
-                aes(label=paste0(round(percent_visits,1), "%"),
-                    colour=condition),
-                hjust=0.5, vjust=0, nudge_y=0.3,
-                fill="#FFFFFF", label.color=NA, size=(11*0.8)/.pt) + 
-  scale_color_manual(values=c(covid="#F06F19", influenza="#0A58D6",rsv="#890664")) +
-  scale_y_continuous(name=NULL, limits=c(0,9), breaks=c(0:9), expand=expansion(mult=c(0,0.08))) +
-  scale_x_date(name="Week end", date_breaks = "12 months", date_labels="%b\n%Y", 
-               expand=c(0,0)) +
-  guides(colour = "none") +
-  geom_text(data = anno_y,
-            aes(x=x, y=y, label=label),
-            hjust=0, vjust=0.5,
-            size = (11*0.8)/.pt,
-            color = "grey30") +
-  ggtitle(chart_title, subtitle=chart_stitle) + 
-  coord_cartesian(clip="off") + #allows drawing http://127.0.0.1:40093/graphics/plot_zoom_png?width=566&height=347outside of plot area
-  facet_grid(~condition) + 
-  theme_minimal() +
-  theme(
-    plot.title=element_markdown(lineheight=1.2),
-    plot.subtitle=element_markdown(lineheight=1.2, margin=margin(b=20)),
-    plot.margin=margin(t=10, b=10, l=10, r=75),
-    legend.title=element_text(face="bold"), legend.position="top",
-    axis.title.x=element_text(margin=margin(t=10)), 
-    panel.spacing=unit(1, "lines"),
-    strip.text=element_text(face="bold"))
+ggsave(
+  filename="resp_ed_visit_trend-3.png",
+  path=".\\Charts",
+  width=6,height=5,
+  dpi="print" #save as print quality
+)
