@@ -249,7 +249,7 @@ base +
 #' may need to play around with this a bit
 
 ctitle_wrap <- str_wrap(ctitle, width=65)
-csubtitle_wrap <- str_wrap(csubtitle, width=70)
+csubtitle_wrap <- str_wrap(csubtitle, width=75)
 ftnt_wrap <- str_wrap(ftnt, width=100, whitespace_only = FALSE)
 
 base +
@@ -526,7 +526,7 @@ ctitle <- "The percentage of emergency department (ED) visits with a discharge d
 csubtitle <- "The percentage of ED visits with a discharge diagnosis of <b>COVID-19\u25AC</b> or <b>RSV\u25AC</b> during the first week of 2026 was 0.9% and 0.%, respectively."
 
 ctitle_wrap <- str_wrap(ctitle, width=65)
-csubtitle_wrap <- str_wrap(csubtitle, width=75)
+csubtitle_wrap <- str_wrap(csubtitle, width=80)
 
 ctitle_wrap <- gsub("\n", "<br>", ctitle_wrap)
 csubtitle_wrap <- gsub("\n", "<br>", csubtitle_wrap)
@@ -727,7 +727,7 @@ base +
            colour="#0A58D6", size=label_size/.pt, hjust=1.25) +
   # x: first week_end date
   # y: the y-axis scale max, which is 9
-  annotate("text", x=min(resp_dat_usa$week_end), y=9, label="% of visit") +
+  annotate("text", x=min(resp_dat_usa$week_end), y=9, label="% of ED visits") +
   # THEME --------------------------------------------------------------
   theme_minimal() +
   theme(
@@ -769,7 +769,7 @@ base +
   annotate("text", x=influ_high$week_end, y=influ_high$percent_visits,
            label=paste0(round(influ_high$percent_visits, 1), "%"),
            colour="#0A58D6", size=label_size/.pt, hjust=1.25) +
-  annotate("text", x=min(resp_dat_usa$week_end), y=9, label="% of visit",
+  annotate("text", x=min(resp_dat_usa$week_end), y=9, label="% of ED visits",
            hjust=0, vjust=0.5, size=label_size/.pt, color="grey30") +
   # THEME --------------------------------------------------------------
   theme_minimal() +
@@ -812,7 +812,7 @@ base +
   annotate("text", x=influ_high$week_end, y=influ_high$percent_visits,
            label=paste0(round(influ_high$percent_visits, 1), "%"),
            colour="#0A58D6", size=label_size/.pt, hjust=1.25) +
-  annotate("text", x=min(resp_dat_usa$week_end), y=9, label="% of visit",
+  annotate("text", x=min(resp_dat_usa$week_end), y=9, label="% of ED visits",
          hjust=0, vjust=0.5, size=label_size/.pt, color="grey30") +
   # THEME --------------------------------------------------------------
   theme_minimal() +
@@ -866,7 +866,7 @@ base +
   annotate("text", x=influ_high$week_end, y=influ_high$percent_visits,
            label=paste0(round(influ_high$percent_visits, 1), "%"),
            colour="#0A58D6", size=label_size/.pt, hjust=1.25) +
-  annotate("text", x=min(resp_dat_usa$week_end), y=9, label="% of visit",
+  annotate("text", x=min(resp_dat_usa$week_end), y=9, label="% of ED visits",
          hjust=0, vjust=0.5, size=label_size/.pt, color="grey30") +
   # FACET --------------------------------------------------------------
   facet_grid(~condition) +
@@ -911,7 +911,7 @@ base +
   annotate("text", x=influ_high$week_end, y=influ_high$percent_visits,
            label=paste0(round(influ_high$percent_visits, 1), "%"),
            colour="#0A58D6", size=label_size/.pt, hjust=1.25) +
-  annotate("text", x=min(resp_dat_usa$week_end), y=9, label="% of visit",
+  annotate("text", x=min(resp_dat_usa$week_end), y=9, label="% of ED visits",
            hjust=0, vjust=0.5, size=label_size/.pt, color="grey30") +
   # FACET --------------------------------------------------------------
   facet_grid(~condition) +
@@ -958,7 +958,7 @@ base +
   annotate("text", x=influ_high$week_end, y=influ_high$percent_visits,
            label=paste0(round(influ_high$percent_visits, 1), "%"),
            colour="#0A58D6", size=label_size/.pt, hjust=1.25) +
-  annotate("text", x=min(resp_dat_usa$week_end), y=9, label="% of visit",
+  annotate("text", x=min(resp_dat_usa$week_end), y=9, label="% of ED visits",
            hjust=0, vjust=0.5, size=label_size/.pt, color="grey30") +
   # FACET --------------------------------------------------------------
   facet_grid(~condition) +
@@ -988,7 +988,7 @@ base +
   # SCALES ------------------------------------------------------------
   scale_color_manual(values=c("COVID-19"="#C04F15", "Influenza"="#0A58D6","RSV"="#652B5A")) +
   scale_y_continuous(limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
-  scale_x_date(date_breaks = "12 months", date_labels="%b\n%Y", expand=c(0,0)) +
+  scale_x_date(date_breaks = "6 months", date_labels="%b\n%Y", expand=c(0,0)) +
   # TITLES -------------------------------------------------------------
   labs(title=ctitle_wrap_fmt, subtitle=csubtitle_wrap_fmt, caption=ftnt_wrap) +
   xlab(label="Week end") +
@@ -1005,7 +1005,7 @@ base +
   annotate("text", x=influ_high$week_end, y=influ_high$percent_visits,
            label=paste0(round(influ_high$percent_visits, 1), "%"),
            colour="#0A58D6", size=label_size/.pt, hjust=1.25) +
-  annotate("text", x=min(resp_dat_usa$week_end), y=9, label="% of visit",
+  annotate("text", x=min(resp_dat_usa$week_end), y=9, label="% of ED visits",
            hjust=0, vjust=0.5, size=label_size/.pt, color="grey30") +
   # THEME --------------------------------------------------------------
   theme_minimal() +
@@ -1028,7 +1028,7 @@ anno_y_axis <- data.frame(
   condition=unique(resp_dat_usa$condition)[1],
   x = min(resp_dat_usa$week_end),
   y = 9,
-  label = "% of visit")
+  label = "% of ED visits")
 
 base +
   # GEOMETRY ----------------------------------------------------------
@@ -1087,7 +1087,9 @@ base +
   # SCALES ------------------------------------------------------------
   scale_color_manual(values=c("COVID-19"="#C04F15", "Influenza"="#0A58D6","RSV"="#652B5A")) +
   scale_y_continuous(limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
-  scale_x_date(date_breaks = "12 months", date_labels="%b\n%Y", expand=c(0,0)) +
+  scale_x_date(date_breaks = "12 months", limits=c(min(resp_dat_usa$week_end), 
+                                                   max(resp_dat_usa$week_end)+months(3)),
+                        date_labels="%b\n%Y", expand=c(0,0)) +
   # TITLES -------------------------------------------------------------
   labs(title=ctitle_wrap_fmt, subtitle=csubtitle_wrap_fmt, caption=ftnt_wrap) +
   xlab(label="Week end") +
