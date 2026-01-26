@@ -40,16 +40,16 @@ base + geom_line()
 
 # Increase line thickness - default is too light!
 
-base + geom_line(linewidth=1.5)
+base + geom_line(linewidth=1.25)
 
 # Add colors to lines
 
-base + geom_line(aes(colour=condition), linewidth=1.5)
+base + geom_line(aes(colour=condition), linewidth=1.25)
 
 # Customize colors
 
 base +
-  geom_line(aes(colour=condition), linewidth=1.5) +
+  geom_line(aes(colour=condition), linewidth=1.25) +
   scale_color_manual(values=c("COVID-19"="#C04F15", "Influenza"="#0A58D6","RSV"="#652B5A"))
 
 # Add and modify scales --------------------------------------------------------
@@ -57,7 +57,7 @@ base +
 #' default scales were added based on our data, but we can customize to what we want
 
 base +
-  geom_line(aes(colour=condition), linewidth=1.5) +
+  geom_line(aes(colour=condition), linewidth=1.25) +
   scale_color_manual(values=c("COVID-19"="#C04F15", "Influenza"="#0A58D6","RSV"="#652B5A")) +
   # y-axis is continuous
   # limit: min of 0, max of 9
@@ -68,7 +68,7 @@ base +
   # date_breaks: tick marks for every 6 months
   # date_labels: format as "Jan YYYY"
   # expand to edge of chart
-  scale_x_date(date_breaks = "6 months", date_labels="%b %Y", expand=c(0,0))
+  scale_x_date(date_breaks = "6 months", date_labels="%b %Y", expand=c(0,0)) 
 
 # NOTE: Coordinate system is inferred to be Cartesian.
 
@@ -79,11 +79,11 @@ base +
 #' since chart titles are long, you can store them in variables
 
 ctitle <- "The percentage of emergency department (ED) visits with a discharge diagnosis of influenza reached a high of 8.5% during the last week of 2025 before decreasing to 6.3% during the first week of 2026."
-csubtitle <- "The percentage of ED visits with a discharge diagnosis of COVID-19 or RSV during the first week of 2026 was 0.9% and 0.%, respectively."
+csubtitle <- "The percentage of ED visits with a discharge diagnosis of COVID-19 or RSV during the first week of 2026 was 0.9% and 0.5%, respectively."
 
 base +
   # GEOMETRY ----------------------------------------------------------------
-  geom_line(aes(colour=condition), linewidth=1.5) +
+  geom_line(aes(colour=condition), linewidth=1.25) +
   # SCALES ------------------------------------------------------------------
   scale_color_manual(values=c("COVID-19"="#C04F15", "Influenza"="#0A58D6","RSV"="#652B5A")) +
   scale_y_continuous(limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
@@ -99,7 +99,7 @@ ftnt <- "Data source: National Syndromic Surveillance Program. Data available at
 
 base +
   # GEOMETRY ----------------------------------------------------------------
-  geom_line(aes(colour=condition), linewidth=1.5) +
+  geom_line(aes(colour=condition), linewidth=1.25) +
   # SCALES ------------------------------------------------------------------
   scale_color_manual(values=c("COVID-19"="#C04F15", "Influenza"="#0A58D6","RSV"="#652B5A")) +
   scale_y_continuous(limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
@@ -113,7 +113,7 @@ base +
 
 base +
   # GEOMETRY ----------------------------------------------------------------
-  geom_line(aes(colour=condition), linewidth=1.5) +
+  geom_line(aes(colour=condition), linewidth=1.25) +
   # SCALES ------------------------------------------------------------------
   scale_color_manual(values=c("COVID-19"="#C04F15", "Influenza"="#0A58D6","RSV"="#652B5A")) +
   scale_y_continuous(limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
@@ -121,7 +121,7 @@ base +
   # TITLES ------------------------------------------------------------------
   labs(title=ctitle, subtitle=csubtitle, caption=ftnt) +
   xlab(label="Week end") +
-  ylab("Percent of ED visits")
+  ylab(label="Percent of ED visits")
 
 # Modify legend
 
@@ -130,7 +130,7 @@ base +
 
 base +
   # GEOMETRY ----------------------------------------------------------------
-  geom_line(aes(colour=condition), linewidth=1.5) +
+  geom_line(aes(colour=condition), linewidth=1.25) +
   # SCALES ------------------------------------------------------------------
   scale_color_manual(values=c("COVID-19"="#C04F15", "Influenza"="#0A58D6","RSV"="#652B5A")) +
   scale_y_continuous(limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
@@ -138,7 +138,7 @@ base +
   # TITLES ------------------------------------------------------------------
   labs(title=ctitle, subtitle=csubtitle, caption=ftnt) +
   xlab(label="Week end") +
-  ylab("Percent of ED visits") +
+  ylab(label="Percent of ED visits") +
   # LEGEND ------------------------------------------------------------------
   # for colour attribute, use a legend
   # for legends, use guide_legend() to customize
@@ -153,7 +153,7 @@ base +
 
 base +
   # GEOMETRY ----------------------------------------------------------------
-  geom_line(aes(colour=condition), linewidth=1.5) +
+  geom_line(aes(colour=condition), linewidth=1.25) +
   # SCALES ------------------------------------------------------------------
   scale_color_manual(values=c("COVID-19"="#C04F15", "Influenza"="#0A58D6","RSV"="#652B5A")) +
   scale_y_continuous(limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
@@ -161,7 +161,7 @@ base +
   # TITLES ------------------------------------------------------------------
   labs(title=ctitle, subtitle=csubtitle, caption=ftnt) +
   xlab(label="Week end") +
-  ylab("Percent of ED visits") +
+  ylab(label="Percent of ED visits") +
   # LEGEND ------------------------------------------------------------------
   guides(colour=guide_legend(title="Condition", position="top")) +
   # THEME -------------------------------------------------------------------
@@ -180,7 +180,7 @@ ftnt_size <- text_size * 0.7
 
 base +
   # GEOMETRY ----------------------------------------------------------------
-  geom_line(aes(colour=condition), linewidth=1.5) +
+  geom_line(aes(colour=condition), linewidth=1.25) +
   # SCALES ------------------------------------------------------------------
   scale_color_manual(values=c("COVID-19"="#C04F15", "Influenza"="#0A58D6","RSV"="#652B5A")) +
   scale_y_continuous(limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
@@ -188,7 +188,7 @@ base +
   # TITLES ------------------------------------------------------------------
   labs(title=ctitle, subtitle=csubtitle, caption=ftnt) +
   xlab(label="Week end") +
-  ylab("Percent of ED visits") +
+  ylab(label="Percent of ED visits") +
   # LEGEND ------------------------------------------------------------------
   guides(colour=guide_legend(title="Condition", position="top")) +
   # THEME -------------------------------------------------------------------
@@ -199,7 +199,7 @@ base +
 
 base +
   # GEOMETRY ----------------------------------------------------------------
-  geom_line(aes(colour=condition), linewidth=1.5) +
+  geom_line(aes(colour=condition), linewidth=1.25) +
   # SCALES ------------------------------------------------------------------
   scale_color_manual(values=c("COVID-19"="#C04F15", "Influenza"="#0A58D6","RSV"="#652B5A")) +
   scale_y_continuous(limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
@@ -207,7 +207,7 @@ base +
   # TITLES ------------------------------------------------------------------
   labs(title=ctitle, subtitle=csubtitle, caption=ftnt) +
   xlab(label="Week end") +
-  ylab("Percent of ED visits") +
+  ylab(label="Percent of ED visits") +
   # LEGEND ------------------------------------------------------------------
   guides(colour=guide_legend(title="Condition", position="top")) +
   # THEME -------------------------------------------------------------------
@@ -222,7 +222,7 @@ base +
 
 base +
   # GEOMETRY ----------------------------------------------------------------
-  geom_line(aes(colour=condition), linewidth=1.5) +
+  geom_line(aes(colour=condition), linewidth=1.25) +
   # SCALES ------------------------------------------------------------------
   scale_color_manual(values=c("COVID-19"="#C04F15", "Influenza"="#0A58D6","RSV"="#652B5A")) +
   scale_y_continuous(limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
@@ -230,7 +230,7 @@ base +
   # TITLES ------------------------------------------------------------------
   labs(title=ctitle, subtitle=csubtitle, caption=ftnt) +
   xlab(label="Week end") +
-  ylab("Percent of ED visits") +
+  ylab(label="Percent of ED visits") +
   # LEGEND ------------------------------------------------------------------
   guides(colour=guide_legend(title="Condition", position="top")) +
   # THEME -------------------------------------------------------------------
@@ -254,7 +254,7 @@ ftnt_wrap <- str_wrap(ftnt, width=100, whitespace_only = FALSE)
 
 base +
   # GEOMETRY ----------------------------------------------------------------
-  geom_line(aes(colour=condition), linewidth=1.5) +
+  geom_line(aes(colour=condition), linewidth=1.25) +
   # SCALES ------------------------------------------------------------------
   scale_color_manual(values=c("COVID-19"="#C04F15", "Influenza"="#0A58D6","RSV"="#652B5A")) +
   scale_y_continuous(limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
@@ -262,7 +262,7 @@ base +
   # TITLES ------------------------------------------------------------------
   labs(title=ctitle_wrap, subtitle=csubtitle_wrap, caption=ftnt_wrap) +
   xlab(label="Week end") +
-  ylab("Percent of ED visits") +
+  ylab(label="Percent of ED visits") +
   # LEGEND -------------------------------------------------------------------
   guides(colour=guide_legend(title="Condition", position="top")) +
   # THEME --------------------------------------------------------------------
@@ -295,7 +295,7 @@ ggsave(
 
 base +
   # GEOMETRY ----------------------------------------------------------
-  geom_line(aes(colour=condition), linewidth=1.5) +
+  geom_line(aes(colour=condition), linewidth=1.25) +
   # SCALES ------------------------------------------------------------
   scale_color_manual(values=c("COVID-19"="#C04F15", "Influenza"="#0A58D6","RSV"="#652B5A")) +
   scale_y_continuous(limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
@@ -303,7 +303,7 @@ base +
   # TITLES -------------------------------------------------------------
   labs(title=ctitle_wrap, subtitle=csubtitle_wrap, caption=ftnt_wrap) +
   xlab(label="Week end") +
-  ylab("Percent of ED visits") +
+  ylab(label="Percent of ED visits") +
   # LEGEND -------------------------------------------------------------
   guides(colour=guide_legend(title="Condition", position="top")) +
   # COORDINATES --------------------------------------------------------
@@ -330,7 +330,7 @@ last_pt
 
 base +
   # GEOMETRY ----------------------------------------------------------
-  geom_line(aes(colour=condition), linewidth=1.5) +
+  geom_line(aes(colour=condition), linewidth=1.25) +
   geom_point(data=last_pt) +
   # don't need to specify x and y, since we are using the same ones in base
   # SCALES ------------------------------------------------------------
@@ -340,7 +340,7 @@ base +
   # TITLES -------------------------------------------------------------
   labs(title=ctitle_wrap, subtitle=csubtitle_wrap, caption=ftnt_wrap) +
   xlab(label="Week end") +
-  ylab("Percent of ED visits") +
+  ylab(label="Percent of ED visits") +
   # LEGEND -------------------------------------------------------------
   guides(colour=guide_legend(title="Condition", position="top")) +
   # COORDINATES --------------------------------------------------------
@@ -357,7 +357,7 @@ base +
 
 base +
   # GEOMETRY ----------------------------------------------------------
-  geom_line(aes(colour=condition), linewidth=1.5) +
+  geom_line(aes(colour=condition), linewidth=1.25) +
   geom_point(data=last_pt, aes(colour=condition), size=4) +
   # SCALES ------------------------------------------------------------
   scale_color_manual(values=c("COVID-19"="#C04F15", "Influenza"="#0A58D6","RSV"="#652B5A")) +
@@ -366,7 +366,7 @@ base +
   # TITLES -------------------------------------------------------------
   labs(title=ctitle_wrap, subtitle=csubtitle_wrap, caption=ftnt_wrap) +
   xlab(label="Week end") +
-  ylab("Percent of ED visits") +
+  ylab(label="Percent of ED visits") +
   # LEGEND -------------------------------------------------------------
   guides(colour=guide_legend(title="Condition", position="top")) +
   # COORDINATES --------------------------------------------------------
@@ -385,7 +385,7 @@ base +
 
 base +
   # GEOMETRY ----------------------------------------------------------
-  geom_line(aes(colour=condition), linewidth=1.5) +
+  geom_line(aes(colour=condition), linewidth=1.25) +
   geom_point(data=last_pt, aes(colour=condition), size=4) +
   # format label as "condition: %"
   geom_text(data=last_pt, aes(label=paste0(condition, ": ", 
@@ -397,7 +397,7 @@ base +
   # TITLES -------------------------------------------------------------
   labs(title=ctitle_wrap, subtitle=csubtitle_wrap, caption=ftnt_wrap) +
   xlab(label="Week end") +
-  ylab("Percent of ED visits") +
+  ylab(label="Percent of ED visits") +
   # LEGEND -------------------------------------------------------------
   guides(colour=guide_legend(title="Condition", position="top")) +
   # COORDINATES --------------------------------------------------------
@@ -414,13 +414,13 @@ base +
 
 base +
   # GEOMETRY ----------------------------------------------------------
-  geom_line(aes(colour=condition), linewidth=1.5) +
+  geom_line(aes(colour=condition), linewidth=1.25) +
   geom_point(data=last_pt, aes(colour=condition), size=4) +
   # format label as "condition: %"
   geom_text(data=last_pt, aes(label=paste0(condition, ": ", 
                                            round(percent_visits, 1), "%"),
                               colour=condition),
-            hjust=-0.1) + 
+            hjust=0) + 
   # SCALES ------------------------------------------------------------
   scale_color_manual(values=c("COVID-19"="#C04F15", "Influenza"="#0A58D6","RSV"="#652B5A")) +
   scale_y_continuous(limits=c(0,9), breaks=c(0:9), expand=c(0,0)) +
@@ -428,7 +428,7 @@ base +
   # TITLES -------------------------------------------------------------
   labs(title=ctitle_wrap, subtitle=csubtitle_wrap, caption=ftnt_wrap) +
   xlab(label="Week end") +
-  ylab("Percent of ED visits") +
+  ylab(label="Percent of ED visits") +
   # LEGEND -------------------------------------------------------------
   guides(colour=guide_legend(title="Condition", position="top")) +
   # COORDINATES --------------------------------------------------------
@@ -446,7 +446,7 @@ base +
 
 base +
   # GEOMETRY ----------------------------------------------------------
-  geom_line(aes(colour=condition), linewidth=1.5) +
+  geom_line(aes(colour=condition), linewidth=1.25) +
   geom_point(data=last_pt, aes(colour=condition), size=4) +
   # format label as "condition: %"
   geom_richtext(data=last_pt, aes(label=paste0("<b>", condition, "</b>:<br>", 
@@ -460,7 +460,7 @@ base +
   # TITLES -------------------------------------------------------------
   labs(title=ctitle_wrap, subtitle=csubtitle_wrap, caption=ftnt_wrap) +
   xlab(label="Week end") +
-  ylab("Percent of ED visits") +
+  ylab(label="Percent of ED visits") +
   # LEGEND -------------------------------------------------------------
   guides(colour=guide_legend(title="Condition", position="top")) +
   # COORDINATES --------------------------------------------------------
@@ -484,7 +484,7 @@ last_pt <- last_pt %>%
 
 base +
   # GEOMETRY ----------------------------------------------------------
-  geom_line(aes(colour=condition), linewidth=1.5) +
+  geom_line(aes(colour=condition), linewidth=1.25) +
   geom_point(data=last_pt, aes(colour=condition), size=4) +
   # format label as "condition: %"
   geom_richtext(data=last_pt, aes(x=week_end, y=v_adj,  # re-specify x and y
@@ -499,7 +499,7 @@ base +
   # TITLES -------------------------------------------------------------
   labs(title=ctitle_wrap, subtitle=csubtitle_wrap, caption=ftnt_wrap) +
   xlab(label="Week end") +
-  ylab("Percent of ED visits") +
+  ylab(label="Percent of ED visits") +
   # LEGEND -------------------------------------------------------------
   guides(colour=guide_legend(title="Condition", position="top")) +
   # COORDINATES --------------------------------------------------------
@@ -533,7 +533,7 @@ csubtitle_wrap <- gsub("\n", "<br>", csubtitle_wrap)
 
 base +
   # GEOMETRY ----------------------------------------------------------
-  geom_line(aes(colour=condition), linewidth=1.5) +
+  geom_line(aes(colour=condition), linewidth=1.25) +
   geom_point(data=last_pt, aes(colour=condition), size=4) +
   # format label as "condition: %"
   geom_richtext(data=last_pt, aes(x=week_end, y=v_adj,  # re-specify x and y
@@ -548,7 +548,7 @@ base +
   # TITLES -------------------------------------------------------------
   labs(title=ctitle_wrap, subtitle=csubtitle_wrap, caption=ftnt_wrap) +
   xlab(label="Week end") +
-  ylab("Percent of ED visits") +
+  ylab(label="Percent of ED visits") +
   # LEGEND -------------------------------------------------------------
   guides(colour=guide_legend(title="Condition", position="top")) +
   # COORDINATES --------------------------------------------------------
@@ -576,7 +576,7 @@ csubtitle_wrap_fmt <- gsub("<b>RSV\u25AC</b>", "<span style='color: #652B5A;'><b
 
 base +
   # GEOMETRY ----------------------------------------------------------
-  geom_line(aes(colour=condition), linewidth=1.5) +
+  geom_line(aes(colour=condition), linewidth=1.25) +
   geom_point(data=last_pt, aes(colour=condition), size=4) +
   # format label as "condition: %"
   geom_richtext(data=last_pt, aes(x=week_end, y=v_adj,  # re-specify x and y
@@ -591,7 +591,7 @@ base +
   # TITLES -------------------------------------------------------------
   labs(title=ctitle_wrap_fmt, subtitle=csubtitle_wrap_fmt, caption=ftnt_wrap) +
   xlab(label="Week end") +
-  ylab("Percent of ED visits") +
+  ylab(label="Percent of ED visits") +
   # LEGEND -------------------------------------------------------------
   guides(colour="none") + #turn off legend
   # COORDINATES --------------------------------------------------------
@@ -618,7 +618,7 @@ influ_high <- resp_dat_usa %>%
 
 base +
   # GEOMETRY ----------------------------------------------------------
-  geom_line(aes(colour=condition), linewidth=1.5) +
+  geom_line(aes(colour=condition), linewidth=1.25) +
   geom_point(data=last_pt, aes(colour=condition), size=4) +
   # format label as "condition: %"
   geom_richtext(data=last_pt, aes(x=week_end, y=v_adj,  # re-specify x and y
@@ -633,7 +633,7 @@ base +
   # TITLES -------------------------------------------------------------
   labs(title=ctitle_wrap_fmt, subtitle=csubtitle_wrap_fmt, caption=ftnt_wrap) +
   xlab(label="Week end") +
-  ylab("Percent of ED visits") +
+  ylab(label="Percent of ED visits") +
   # LEGEND -------------------------------------------------------------
   guides(colour="none") + #turn off legend
   # COORDINATES --------------------------------------------------------
@@ -658,7 +658,7 @@ base +
 
 base +
   # GEOMETRY ----------------------------------------------------------
-  geom_line(aes(colour=condition), linewidth=1.5) +
+  geom_line(aes(colour=condition), linewidth=1.25) +
   geom_point(data=last_pt, aes(colour=condition), size=4) +
   # format label as "condition: %"
   geom_richtext(data=last_pt, aes(x=week_end, y=v_adj,  # re-specify x and y
@@ -673,7 +673,7 @@ base +
   # TITLES -------------------------------------------------------------
   labs(title=ctitle_wrap_fmt, subtitle=csubtitle_wrap_fmt, caption=ftnt_wrap) +
   xlab(label="Week end") +
-  ylab("Percent of ED visits") +
+  ylab(label="Percent of ED visits") +
   # LEGEND -------------------------------------------------------------
   guides(colour="none") + #turn off legend
   # COORDINATES --------------------------------------------------------
@@ -699,7 +699,7 @@ base +
 
 base +
   # GEOMETRY ----------------------------------------------------------
-  geom_line(aes(colour=condition), linewidth=1.5) +
+  geom_line(aes(colour=condition), linewidth=1.25) +
   geom_point(data=last_pt, aes(colour=condition), size=4) +
   # format label as "condition: %"
   geom_richtext(data=last_pt, aes(x=week_end, y=v_adj,  # re-specify x and y
@@ -714,7 +714,7 @@ base +
   # TITLES -------------------------------------------------------------
   labs(title=ctitle_wrap_fmt, subtitle=csubtitle_wrap_fmt, caption=ftnt_wrap) +
   xlab(label="Week end") +
-  ylab("Percent of ED visits") +
+  ylab(label="Percent of ED visits") +
   # LEGEND -------------------------------------------------------------
   guides(colour="none") + #turn off legend
   # COORDINATES --------------------------------------------------------
@@ -743,7 +743,7 @@ base +
 
 base +
   # GEOMETRY ----------------------------------------------------------
-  geom_line(aes(colour=condition), linewidth=1.5) +
+  geom_line(aes(colour=condition), linewidth=1.25) +
   geom_point(data=last_pt, aes(colour=condition), size=4) +
   # format label as "condition: %"
   geom_richtext(data=last_pt, aes(x=week_end, y=v_adj,  # re-specify x and y
@@ -758,7 +758,7 @@ base +
   # TITLES -------------------------------------------------------------
   labs(title=ctitle_wrap_fmt, subtitle=csubtitle_wrap_fmt, caption=ftnt_wrap) +
   xlab(label="Week end") +
-  ylab("Percent of ED visits") +
+  ylab(label="Percent of ED visits") +
   # LEGEND -------------------------------------------------------------
   guides(colour="none") + #turn off legend
   # COORDINATES --------------------------------------------------------
@@ -786,7 +786,7 @@ base +
 
 base +
   # GEOMETRY ----------------------------------------------------------
-  geom_line(aes(colour=condition), linewidth=1.5) +
+  geom_line(aes(colour=condition), linewidth=1.25) +
   geom_point(data=last_pt, aes(colour=condition), size=4) +
   # format label as "condition: %"
   geom_richtext(data=last_pt, aes(x=week_end, y=v_adj,  # re-specify x and y
@@ -801,7 +801,7 @@ base +
   # TITLES -------------------------------------------------------------
   labs(title=ctitle_wrap_fmt, subtitle=csubtitle_wrap_fmt, caption=ftnt_wrap) +
   xlab(label="Week end") +
-  ylab("Percent of ED visits") +
+  ylab(label="Percent of ED visits") +
   # LEGEND -------------------------------------------------------------
   guides(colour="none") + #turn off legend
   # COORDINATES --------------------------------------------------------
@@ -840,7 +840,7 @@ ggsave(
 
 base +
   # GEOMETRY ----------------------------------------------------------
-  geom_line(aes(colour=condition), linewidth=1.5) +
+  geom_line(aes(colour=condition), linewidth=1.25) +
   geom_point(data=last_pt, aes(colour=condition), size=4) +
   # format label as "condition: %"
   geom_richtext(data=last_pt, aes(x=week_end, y=v_adj,  # re-specify x and y
@@ -855,7 +855,7 @@ base +
   # TITLES -------------------------------------------------------------
   labs(title=ctitle_wrap_fmt, subtitle=csubtitle_wrap_fmt, caption=ftnt_wrap) +
   xlab(label="Week end") +
-  ylab("Percent of ED visits") +
+  ylab(label="Percent of ED visits") +
   # LEGEND -------------------------------------------------------------
   guides(colour="none") + #turn off legend
   # COORDINATES --------------------------------------------------------
@@ -885,7 +885,7 @@ base +
 
 base +
   # GEOMETRY ----------------------------------------------------------
-  geom_line(aes(colour=condition), linewidth=1.5) +
+  geom_line(aes(colour=condition), linewidth=1.25) +
   geom_point(data=last_pt, aes(colour=condition), size=4) +
   # format label as "condition: %"
   geom_richtext(data=last_pt, aes(x=week_end, y=v_adj,  # re-specify x and y
@@ -900,7 +900,7 @@ base +
   # TITLES -------------------------------------------------------------
   labs(title=ctitle_wrap_fmt, subtitle=csubtitle_wrap_fmt, caption=ftnt_wrap) +
   xlab(label="Week end") +
-  ylab("Percent of ED visits") +
+  ylab(label="Percent of ED visits") +
   # LEGEND -------------------------------------------------------------
   guides(colour="none") + #turn off legend
   # COORDINATES --------------------------------------------------------
@@ -932,7 +932,7 @@ base +
 
 base +
   # GEOMETRY ----------------------------------------------------------
-  geom_line(aes(colour=condition), linewidth=1.5) +
+  geom_line(aes(colour=condition), linewidth=1.25) +
   geom_point(data=last_pt, aes(colour=condition), size=4) +
   # format label as "condition: %"
   geom_richtext(data=last_pt, aes(label=paste0(round(percent_visits, 1), "%"),
@@ -947,7 +947,7 @@ base +
   # TITLES -------------------------------------------------------------
   labs(title=ctitle_wrap_fmt, subtitle=csubtitle_wrap_fmt, caption=ftnt_wrap) +
   xlab(label="Week end") +
-  ylab("Percent of ED visits") +
+  ylab(label="Percent of ED visits") +
   # LEGEND -------------------------------------------------------------
   guides(colour="none") + #turn off legend
   # COORDINATES --------------------------------------------------------
@@ -978,7 +978,7 @@ base +
 
 base +
   # GEOMETRY ----------------------------------------------------------
-  geom_line(aes(colour=condition), linewidth=1.5) +
+  geom_line(aes(colour=condition), linewidth=1.25) +
   geom_point(data=last_pt, aes(colour=condition), size=4) +
   # format label as "condition: %"
   geom_richtext(data=last_pt, aes(label=paste0(round(percent_visits, 1), "%"),
@@ -992,7 +992,7 @@ base +
   # TITLES -------------------------------------------------------------
   labs(title=ctitle_wrap_fmt, subtitle=csubtitle_wrap_fmt, caption=ftnt_wrap) +
   xlab(label="Week end") +
-  ylab("Percent of ED visits") +
+  ylab(label="Percent of ED visits") +
   # LEGEND -------------------------------------------------------------
   guides(colour="none") + #turn off legend
   # COORDINATES --------------------------------------------------------
@@ -1032,7 +1032,7 @@ anno_y_axis <- data.frame(
 
 base +
   # GEOMETRY ----------------------------------------------------------
-  geom_line(aes(colour=condition), linewidth=1.5) +
+  geom_line(aes(colour=condition), linewidth=1.25) +
   geom_point(data=last_pt, aes(colour=condition), size=4) +
   # format label as "condition: %"
   geom_richtext(data=last_pt, aes(label=paste0(round(percent_visits, 1), "%"),
@@ -1046,7 +1046,7 @@ base +
   # TITLES -------------------------------------------------------------
   labs(title=ctitle_wrap_fmt, subtitle=csubtitle_wrap_fmt, caption=ftnt_wrap) +
   xlab(label="Week end") +
-  ylab("Percent of ED visits") +
+  ylab(label="Percent of ED visits") +
   # LEGEND -------------------------------------------------------------
   guides(colour="none") + #turn off legend
   # COORDINATES --------------------------------------------------------
@@ -1077,7 +1077,7 @@ base +
 
 base +
   # GEOMETRY ----------------------------------------------------------
-  geom_line(aes(colour=condition), linewidth=1.5) +
+  geom_line(aes(colour=condition), linewidth=1.25) +
   geom_point(data=last_pt, aes(colour=condition), size=4) +
   # format label as "condition: %"
   geom_richtext(data=last_pt, aes(label=paste0(round(percent_visits, 1), "%"),
@@ -1093,7 +1093,7 @@ base +
   # TITLES -------------------------------------------------------------
   labs(title=ctitle_wrap_fmt, subtitle=csubtitle_wrap_fmt, caption=ftnt_wrap) +
   xlab(label="Week end") +
-  ylab("Percent of ED visits") +
+  ylab(label="Percent of ED visits") +
   # LEGEND -------------------------------------------------------------
   guides(colour="none") + #turn off legend
   # COORDINATES --------------------------------------------------------
