@@ -615,7 +615,7 @@ ggplot(data=tbi_dat_age, aes(x=age, y=percent, fill=stay_length)) +
   scale_colour_manual(values=c("0-1 days"="#000000", "2-6 days"="#FFFFFF",
                                "7+ days"="#FFFFFF")) + 
   scale_x_discrete() +
-  scale_y_continuous() +
+  scale_y_continuous(label=NULL) +
   # TITLES --------------------------------------------------------------
   labs(title=ctitle, subtitle=csubtitle, caption=ftnt) +
   xlab(label="Age group in years") +
@@ -642,7 +642,7 @@ ggplot(data=tbi_dat_age, aes(x=age, y=percent, fill=stay_length)) +
   scale_colour_manual(values=c("0-1 days"="#000000", "2-6 days"="#FFFFFF",
                                "7+ days"="#FFFFFF")) + 
   scale_x_discrete() +
-  scale_y_continuous() +
+  scale_y_continuous(label=NULL) +
   # TITLES --------------------------------------------------------------
   labs(title=ctitle, subtitle=csubtitle, caption=ftnt) +
   xlab(label="Age group in years") +
@@ -676,7 +676,7 @@ ggplot(data=tbi_dat_age, aes(x=age, y=percent, fill=stay_length)) +
   scale_colour_manual(values=c("0-1 days"="#000000", "2-6 days"="#FFFFFF",
                                "7+ days"="#FFFFFF")) + 
   scale_x_discrete() +
-  scale_y_continuous() +
+  scale_y_continuous(label=NULL) +
   # TITLES --------------------------------------------------------------
   labs(title=ctitle_wrap, subtitle=csubtitle_wrap, caption=ftnt_wrap) +
   xlab(label="Age group in years") +
@@ -700,12 +700,13 @@ ggplot(data=tbi_dat_age, aes(x=age, y=percent, fill=stay_length)) +
   geom_text(aes(label=paste0(percent, "%"), colour=stay_length), 
             size=label_size/.pt, position=position_stack(vjust=0.5)) +
   # SCALES -------------------------------------------------------------
-  scale_fill_manual(values=c("0-1 days"="#96DCF8", "2-6 days"="#0D86B7",
+  scale_fill_manual(values=c("0-
+                             1 days"="#96DCF8", "2-6 days"="#0D86B7",
                            "7+ days"="#DE5A18"))  +
   scale_colour_manual(values=c("0-1 days"="#000000", "2-6 days"="#FFFFFF",
                                "7+ days"="#FFFFFF")) + 
   scale_x_discrete() +
-  scale_y_continuous() +
+  scale_y_continuous(label=NULL) +
   # TITLES --------------------------------------------------------------
   labs(title=ctitle_wrap_fmt, subtitle=csubtitle_wrap, caption=ftnt_wrap) +
   xlab(label="Age group in years") +
