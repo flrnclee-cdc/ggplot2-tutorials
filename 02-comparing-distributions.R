@@ -16,10 +16,6 @@ library(ggtext)
 getwd() #shows current directory
 setwd("C:\\Users\\kwn5\\OneDrive - CDC\\Trainings\\2026_EIS-Training\\ggplot2-tutorials") 
 
-# load theme
-
-source("theme_mine.R")
-
 # READ IN DATA =================================================================
 
 tbi_dat <- read.csv(".\\Datasets\\tbi-severity-age.csv")
@@ -67,16 +63,6 @@ base +
   scale_fill_manual(values=c("0-1 days"="#D9D9D9", "2-6 days"="#0D86B7",
                              "7+ days"="#A6A6A6"))
 
-# Apply theme ------------------------------------------------------------------
-
-# use theme created in example 01
-
-base +
-  geom_bar(stat="identity", colour="#FFFFFF", linewidth=1) +
-  scale_fill_manual(values=c("0-1 days"="#D9D9D9", "2-6 days"="#0D86B7",
-                             "7+ days"="#A6A6A6")) +
-  theme_mine()
-
 # Add and modify scales --------------------------------------------------------
 
 base +
@@ -84,8 +70,7 @@ base +
   scale_fill_manual(values=c("0-1 days"="#D9D9D9", "2-6 days"="#0D86B7",
                              "7+ days"="#A6A6A6")) +
   scale_x_discrete(labels=NULL) +
-  scale_y_continuous(labels=NULL) +
-  theme_mine()
+  scale_y_continuous(labels=NULL)
 
 # Add annotations --------------------------------------------------------------
 
@@ -104,9 +89,7 @@ base +
   scale_x_discrete(labels=NULL) +
   scale_y_continuous(labels=NULL) +
   # TITLES --------------------------------------------------------------
-  labs(title=ctitle) +
-  # THEME ---------------------------------------------------------------
-  theme_mine()
+  labs(title=ctitle)
 
 #' the title bleeds out of chart space, but we will deal with this later
 
@@ -121,12 +104,9 @@ base +
   scale_fill_manual(values=c("0-1 days"="#D9D9D9", "2-6 days"="#0D86B7",
                            "7+ days"="#A6A6A6")) +
   scale_x_discrete(labels=NULL) +
-  # COORDINATE SYSTEM ---------------------------------------------------
-  coord_polar(theta="y", start=0) +
+  scale_y_continuous(labels=NULL) +
   # TITLES --------------------------------------------------------------
-  labs(title=ctitle, caption=ftnt) +
-  # THEME ---------------------------------------------------------------
-  theme_mine()
+  labs(title=ctitle, caption=ftnt)
 
 # Modify axis labels
 
@@ -143,9 +123,7 @@ base +
   # TITLES --------------------------------------------------------------
   labs(title=ctitle, caption=ftnt) +
   xlab(label="") + 
-  ylab(label="") +
-  # THEME ---------------------------------------------------------------
-  theme_mine()
+  ylab(label="")
 
 # Modify legend
 
@@ -162,9 +140,7 @@ base +
   xlab(label="") + 
   ylab(label="") +
   # LEGEND --------------------------------------------------------------
-  guides(fill=guide_legend(title="Stay length", position="top")) +
-  # THEME ---------------------------------------------------------------
-  theme_mine()
+  guides(fill=guide_legend(title="Stay length", position="top"))
 
 # Add data label
 
@@ -183,10 +159,8 @@ base +
   xlab(label="") + 
   ylab(label="") +
   # LEGEND --------------------------------------------------------------
-  guides(fill=guide_legend(title="Stay length", position="top")) +
-  # THEME ---------------------------------------------------------------
-  theme_mine()
-
+  guides(fill=guide_legend(title="Stay length", position="top")) 
+  
 #' we can add more detailed data labels to remove legend
 
 base +
@@ -204,11 +178,35 @@ base +
   xlab(label="") + 
   ylab(label="") +
   # LEGEND --------------------------------------------------------------
-  guides(fill="none") +
-  # THEME ---------------------------------------------------------------
-  theme_mine()
+  guides(fill="none")
 
 #' for groups with dark colors, use white text
+
+base +
+  # GEOMETRY ------------------------------------------------------------
+  geom_bar(stat="identity", colour="#FFFFFF", linewidth=1) +
+  geom_text(aes(label=paste0(round(percent, 1), "%\nstayed ", stay_length),
+                colour=stay_length), 
+            position=position_stack(vjust=0.5)) +
+  # SCALES --------------------------------------------------------------
+  scale_fill_manual(values=c("0-1 days"="#D9D9D9", "2-6 days"="#0D86B7",
+                           "7+ days"="#A6A6A6")) +
+  scale_colour_manual(values=c("0-1 days"="#000000", "2-6 days"="#FFFFFF",
+                               "7+ days"="#FFFFFF")) + 
+  scale_x_discrete(labels=NULL) +
+  scale_y_continuous(labels=NULL) +
+  # TITLES --------------------------------------------------------------
+  labs(title=ctitle, caption=ftnt) +
+  xlab(label="") + 
+  ylab(label="") +
+  # LEGEND --------------------------------------------------------------
+  guides(fill="none", colour="none") 
+  
+# Apply theme ------------------------------------------------------------------
+
+# use theme created in example 01
+
+source("theme_mine.R")
 
 base +
   # GEOMETRY ------------------------------------------------------------
@@ -232,7 +230,7 @@ base +
   # THEME ---------------------------------------------------------------
   theme_mine()
 
-# Assign coordinate system -----------------------------------------------------
+# Define coordinate system -----------------------------------------------------
 
 base +
   # GEOMETRY ------------------------------------------------------------
@@ -424,7 +422,6 @@ ggsave(
 
 # Assign data to aesthetics ----------------------------------------------------
 
-# replace dataset with tbi_dat_age
 ggplot(data=tbi_dat_age, 
        aes(x=age, y=percent, fill=stay_length))
 
@@ -586,6 +583,8 @@ ggplot(data=tbi_dat_age, aes(x=age, y=percent, fill=stay_length)) +
 
 
 # remove extra legend
+# remove y-axis labeling 
+
 ggplot(data=tbi_dat_age, aes(x=age, y=percent, fill=stay_length)) +
   # GEOMETRY -----------------------------------------------------------
   geom_bar(stat="identity", colour="#FFFFFF", linewidth=1) +
@@ -596,7 +595,7 @@ ggplot(data=tbi_dat_age, aes(x=age, y=percent, fill=stay_length)) +
   scale_colour_manual(values=c("0-1 days"="#000000", "2-6 days"="#FFFFFF",
                                "7+ days"="#FFFFFF")) + 
   scale_x_discrete() +
-  scale_y_continuous() +
+  scale_y_continuous(label=NULL) +
   # TITLES --------------------------------------------------------------
   labs(title=ctitle, subtitle=csubtitle, caption=ftnt) +
   xlab(label="Age group in years") +
@@ -695,12 +694,6 @@ ggplot(data=tbi_dat_age, aes(x=age, y=percent, fill=stay_length)) +
 ctitle_wrap_fmt <- gsub("7 or more days", "<span style='color: #DE5A18;'>7 or more days</span>", 
                         ctitle_wrap)
 
-ctitle_wrap <- str_wrap(ctitle, width=65)
-csubtitle_wrap <- str_wrap(csubtitle, width=75)
-ftnt_wrap <- str_wrap(ftnt, width=100, whitespace_only = FALSE)
-ctitle_wrap <- gsub("\n", "<br>", ctitle_wrap)
-csubtitle_wrap <- gsub("\n", "<br>", csubtitle_wrap)
-
 ggplot(data=tbi_dat_age, aes(x=age, y=percent, fill=stay_length)) +
   # GEOMETRY -----------------------------------------------------------
   geom_bar(stat="identity", colour="#FFFFFF", linewidth=1) +
@@ -721,7 +714,7 @@ ggplot(data=tbi_dat_age, aes(x=age, y=percent, fill=stay_length)) +
   guides(fill=guide_legend(title="Stay length", position="top") ,
        colour="none") +
   # COORDINATE SYSTEM ---------------------------------------------------
-  coord_cartesian() +
+  coord_cartesian() +   
   # THEME --------------------------------------------------------------- 
   theme_mine()
 
