@@ -1,2 +1,6 @@
-nssp_ed_covid19_flu_rsv.csv
-- downloaded from https://data.cdc.gov/Public-Health-Surveillance/NSSP-Emergency-Department-Visit-Trajectories-by-St/rdmq-nq56/about_data 
+resp-dat-usa.csv
+- source downloaded from https://data.cdc.gov/Public-Health-Surveillance/NSSP-Emergency-Department-Visit-Trajectories-by-St/rdmq-nq56/about_data 
+tbi-severity-age.csv
+- data from https://www.cdc.gov/mmwr/preview/mmwrhtml/ss5204a1.htm
+teen-tobacco-use.csv
+- data from https://www.cdc.gov/mmwr/volumes/68/wr/mm6806e1.htm?s_cid=mm6806e1_w
