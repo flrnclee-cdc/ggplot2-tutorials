@@ -15,9 +15,10 @@ theme_mine <- function() {
   theme_minimal() +
     theme(
       plot.title=element_markdown(face="bold", lineheight=1.1, size=text_size*1.1),
-      plot.subtitle=element_markdown(margin=margin(b=20), lineheight=1.1, size=text_size*0.9),
+      plot.subtitle=element_markdown(margin=margin(b=5), lineheight=1.1, size=text_size*0.9),
       legend.title=element_text(face="bold", size=label_size),
-      axis.title.x=element_text(size=label_size, margin=margin(t=10)),
+      legend.box.spacing=unit(1, "pt"),
+      axis.title.x=element_text(size=label_size, margin=margin(t=10, b=10)),
       axis.title.y=element_text(size=label_size, margin=margin(r=10)),
       plot.caption=element_text(size=ftnt_size, hjust=0),
       plot.margin=margin(t=15, b=10, l=10, r=20),
