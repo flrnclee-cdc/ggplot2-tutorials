@@ -1,6 +1,7 @@
 # DESCRIPTION ==================================================================
 
-#' TEXT
+#' Create a grouped bar chart and dumbbell plot to compare data
+#' across two groups. 
 
 # SET-UP =======================================================================
 
@@ -24,9 +25,12 @@ str(tob_dat)
 
 tob_dat$year <- as.character(tob_dat$year)
 
+# CREATE HORIZONTAL BAR CHART ==================================================
+
 ggplot(data=tob_dat, aes(x=product, y=percent, fill=year)) +
   geom_bar(stat="identity", position="dodge")
 
+#' products are currently sorted alphabetically
 #' sort by 2018 value
 
 tob_dat <- tob_dat %>% 
@@ -36,40 +40,51 @@ tob_dat <- tob_dat %>%
   arrange(desc(year), desc(pct18)) %>%
   select(-pct18)
 
-#' turn product into factor based on this ordering
- 
+# turn product into factor based on this ordering
 tob_dat$product <- factor(tob_dat$product, levels=unique(tob_dat$product))
-
-ggplot(data=tob_dat, aes(x=product, y=percent, fill=year)) +
-  geom_bar(stat="identity", position="dodge")
-
-ggplot(data=tob_dat, aes(x=product, y=percent, fill=year)) +
-  geom_bar(stat="identity", position="dodge") +
-  geom_text(aes(label=paste0(percent, "%")), position=position_dodge(width=0.9),
-            hjust=-0.1) +
-  scale_fill_manual(values=c("2011"="#A3CEED", "2018"="#1D6295")) +
-  scale_x_discrete(limits = rev) +
-  scale_y_continuous() +
-  xlab("") +
-  ylab("Percent") +
-  guides(fill=guide_legend(title="", position="top")) +
-  coord_flip()
-
 
 source("theme_mine.R")
 
 ggplot(data=tob_dat, aes(x=product, y=percent, fill=year)) +
   geom_bar(stat="identity", position="dodge") +
+  # add data label
   geom_text(aes(label=paste0(percent, "%")), position=position_dodge(width=0.9),
-            hjust=-0.1, size=label_size/.pt) +
+            hjust=0.5, vjust=-0.3) +
+  # adjust colors
   scale_fill_manual(values=c("2011"="#A3CEED", "2018"="#1D6295")) +
-  scale_x_discrete(limits = rev) +
+  scale_x_discrete() +
   scale_y_continuous() +
+  # adjust axis labels
   xlab("") +
   ylab("Percent") +
+  # place legend at top
+  guides(fill=guide_legend(title="", position="top")) +
+  # apply theme
+  theme_mine()
+
+# turn into horizontal bar chart
+# note x-axis still corresponds to products
+
+ggplot(data=tob_dat, aes(x=product, y=percent, fill=year)) +
+  geom_bar(stat="identity", position="dodge") +
+  # add data label
+  geom_text(aes(label=paste0(percent, "%")), position=position_dodge(width=0.9),
+            hjust=-0.1, vjust=0.3, size=label_size/.pt) +
+  # adjust colors
+  scale_fill_manual(values=c("2011"="#A3CEED", "2018"="#1D6295")) +
+  scale_x_discrete(limits=rev) +
+  # expand so labels aren't cut off
+  scale_y_continuous(expand=expansion(mult=c(0.1, 0.1))) +
+  # adjust axis labels
+  xlab("") +
+  ylab("Percent") +
+  # place legend at top
   guides(fill=guide_legend(title="", position="top")) +
   coord_flip() +
+  # apply theme
   theme_mine()
+
+# Add titles
 
 ctitle <- "Between 2011 and 2018, e-cigarette use among high school students increased by 19 percentage points."
 csubtitle <- "Current use of other tobacco products decreased or did not change."
@@ -83,17 +98,24 @@ csubtitle_wrap <- gsub("\n", "<br>", csubtitle_wrap)
 
 ggplot(data=tob_dat, aes(x=product, y=percent, fill=year)) +
   geom_bar(stat="identity", position="dodge") +
+  # add data label
   geom_text(aes(label=paste0(percent, "%")), position=position_dodge(width=0.9),
-            hjust=-0.1, size=label_size/.pt) +
+            hjust=-0.1, vjust=0.3, size=label_size/.pt) +
+  # adjust colors
   scale_fill_manual(values=c("2011"="#A3CEED", "2018"="#1D6295")) +
-  scale_x_discrete(limits = rev) +
-  scale_y_continuous(labels=NULL) +
+  scale_x_discrete(limits=rev) +
+  # expand so labels aren't cut off
+  scale_y_continuous(labels=NULL, expand=expansion(mult=c(0.1, 0.1))) +
   labs(title=ctitle_wrap, subtitle=csubtitle_wrap, caption=ftnt_wrap) + 
+  # adjust axis labels
   xlab("") +
   ylab("Percent") +
+  # place legend at top
   guides(fill=guide_legend(title="", position="top")) +
   coord_flip() +
-  theme_mine() 
+  # apply theme
+  theme_mine() +
+  theme(panel.grid=element_blank())
 
 ggsave(
   filename="hs-tobacco-use-1.png",
@@ -102,38 +124,46 @@ ggsave(
   dpi="print" #save as print quality
 )
 
-tob_dat_2 <- tob_dat %>%
+# CREATE DUMMBELL PLOT =========================================================
+
+# create a wide version of dataset
+tob_dat_w <- tob_dat %>%
   pivot_wider(names_from=year, values_from=percent)
 
-ggplot(data=tob_dat_2, aes(y=product)) +
+ggplot(data=tob_dat_w, aes(y=product)) +
+  # add segment connecting dots
   geom_segment(aes(x=`2011`, xend=`2018`, yend=product),
                colour="#000000", size=2) +
+  # add points
   geom_point(data=tob_dat, aes(x=percent, y=product, colour=year), size=5) +
+  # adjust colors
   scale_colour_manual(values=c("2011"="#A3CEED", "2018"="#1D6295")) +
   scale_x_continuous(labels=NULL) +
-  scale_y_discrete() +
+  scale_y_discrete(limits=rev) +
   labs(title=ctitle_wrap, subtitle=csubtitle_wrap, caption=ftnt_wrap) + 
   ylab("") +
   xlab("Percent") +
   guides(colour=guide_legend(title="", position="top")) +
   theme_mine() 
   
+# Add data labels
 
+# horizontal placement will vary for min vs. max
 tob_dat <- tob_dat %>%
   group_by(product) %>%
   mutate(is_left = percent==min(percent)) %>%
   ungroup()
 
-ggplot(data=tob_dat_2, aes(y=product)) +
+ggplot(data=tob_dat_w, aes(y=product)) +
   geom_segment(aes(x=`2011`, xend=`2018`, yend=product),
                colour="#000000", size=2) +
   geom_point(data=tob_dat, aes(x=percent, y=product, colour=year), size=5) +
   geom_text(data=tob_dat, aes(x=percent, y=product, 
-                              label=paste0(percent, "%"), 
+                              label=paste0(" ", percent, "%"), 
                               colour=year), size=label_size/.pt,
-            hjust=ifelse(tob_dat$is_left, 1.3, -0.)) +
+            hjust=ifelse(tob_dat$is_left, 1.3, -0.3)) +
   scale_colour_manual(values=c("2011"="#A3CEED", "2018"="#1D6295")) +
-  scale_x_continuous(labels=NULL, expand=expansion(mult = c(0.15, 0.2))) +
+  scale_x_continuous(labels=NULL, expand=expansion(mult = c(0.15, 0.3))) +
   scale_y_discrete(limits=rev) +
   labs(title=ctitle_wrap, subtitle=csubtitle_wrap, caption=ftnt_wrap) + 
   ylab("") +
