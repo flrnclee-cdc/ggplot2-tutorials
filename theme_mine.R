@@ -14,9 +14,13 @@ showtext_auto()
 
 # store default font size
 text_size <- theme_minimal()$text$size * 2.0
-# create a label size
-label_size <- text_size * 1
-# specify even smaller text for footnote
+# specify h1 title size
+title_size <- text_size*1.2
+# specify h2 title size
+subtitle_size <- text_size*1.1
+# specify label size
+label_size <- text_size
+# specify smaller text for footnote (70%)
 ftnt_size <- text_size * 0.7
 
 theme_mine <- function() {
@@ -24,8 +28,8 @@ theme_mine <- function() {
     theme(
       text=element_text(family="nunito sans", size=text_size),
       # Plot titles
-      plot.title=element_markdown(face="bold", lineheight=1.1, size=text_size*1.2),
-      plot.subtitle=element_markdown(margin=margin(b=5), lineheight=1.1, size=text_size*1.1),
+      plot.title=element_markdown(face="bold", lineheight=1.1, size=title_size),
+      plot.subtitle=element_markdown(margin=margin(b=5), lineheight=1.1, size=subtitle_size),
       # Legend
       legend.title=element_text(face="bold", size=label_size),
       legend.box.spacing=unit(1, "pt"),
