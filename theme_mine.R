@@ -20,6 +20,8 @@ body_size <- theme_minimal()$text$size * 0.85
 title_size <- body_size*1.25
 # specify h2 title size (115%)
 subtitle_size <- body_size*1.15
+# specify anno title size (95%)
+anno_size <- body_size*0.95
 # specify smaller text for footnote (80%)
 ftnt_size <- body_size * 0.8
 
@@ -30,13 +32,13 @@ theme_mine <- function() {
       text=element_text(family="nunito sans", size=body_size),
       # Plot titles ------------------------------------------------------------
       plot.title=element_markdown(face="bold", lineheight=1.1, size=title_size),
-      plot.subtitle=element_markdown(margin=margin(b=5), lineheight=1.1, size=subtitle_size),
+      plot.subtitle=element_markdown(margin=margin(b=10), lineheight=1.1, size=subtitle_size),
       # Legend -----------------------------------------------------------------
       legend.title=element_text(face="bold", size=body_size),
       legend.text=element_text(size=body_size),
       legend.box.spacing=unit(1, "pt"),
       # Panels -----------------------------------------------------------------
-      strip.text=element_text(face="bold", margin=margin(b=10)),
+      strip.text=element_text(face="bold", margin=margin(b=10), size=body_size),
       panel.spacing=unit(1.25, "lines"),
       # Axes -------------------------------------------------------------------
       axis.text=element_text(size=body_size),
@@ -46,6 +48,20 @@ theme_mine <- function() {
       plot.caption=element_text(size=ftnt_size, hjust=0),
       # Margins/spacing --------------------------------------------------------
       plot.margin=margin(t=15, b=10, l=10, r=20))
+}
+
+geom_text_mine <- function(...) {
+  geom_text(
+    family = "nunito sans",
+    ...
+  )
+}
+
+geom_richtext_mine <- function(...) {
+  geom_richtext(
+    family = "nunito sans",
+    ...
+  )
 }
 
 # ==============================================================================
