@@ -9,7 +9,6 @@
 library(openxlsx)
 library(tidyverse)
 library(ggtext)
-library(showtext)
 
 # set directory 
 
