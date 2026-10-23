@@ -4,7 +4,20 @@
 #' tutorial. The modifications increase whitespace and apply fonts more 
 #' closely aligned to the CDC brand.
 
+# Check for necessary packages -------------------------------------------------
+
+load_or_install <- function(packages) {
+  for (pkg in packages) {
+    if (!requireNamespace(pkg, quietly = TRUE)) {
+      install.packages(pkg)
+    }
+    library(pkg, character.only = TRUE)
+  }
+}
+
 # Install fonts from Google Fonts ----------------------------------------------
+
+load_or_install(c("tidyverse", "ggtext", "showtext"))
 
 library(showtext)
 font_add_google("Nunito Sans", "nunito sans")

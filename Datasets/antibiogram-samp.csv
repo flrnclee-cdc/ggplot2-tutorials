@@ -1,0 +1,97 @@
+org_id,ab_id,pct_susc,org_name,n,gram,ab_name,ab_class,low_n
+ecoli,amp,52,E. coli,412,negative,Ampicillin,Penicillin,FALSE
+ecoli,amc,68,E. coli,412,negative,Amp-Sulbactam,Penicillin,FALSE
+ecoli,czo,71,E. coli,412,negative,Cefazolin,Cephalosporin,FALSE
+ecoli,caz,91,E. coli,412,negative,Ceftazidime,Cephalosporin,FALSE
+ecoli,cro,90,E. coli,412,negative,Ceftriaxone,Cephalosporin,FALSE
+ecoli,fep,94,E. coli,412,negative,Cefepime,Cephalosporin,FALSE
+ecoli,mem,100,E. coli,412,negative,Meropenem,Carbapenem,FALSE
+ecoli,cip,78,E. coli,412,negative,Ciprofloxacin,Fluoroquinolone,FALSE
+ecoli,gen,92,E. coli,412,negative,Gentamicin,Aminoglycoside,FALSE
+ecoli,sxt,74,E. coli,412,negative,Bactrim,Folate inhibitor,FALSE
+ecoli,van,NA,E. coli,412,negative,Vancomycin,Glycopeptide,FALSE
+ecoli,lzd,NA,E. coli,412,negative,Linezolid,Oxazolidinone,FALSE
+kpneu,amp,NA,K. pneumoniae,187,negative,Ampicillin,Penicillin,FALSE
+kpneu,amc,72,K. pneumoniae,187,negative,Amp-Sulbactam,Penicillin,FALSE
+kpneu,czo,80,K. pneumoniae,187,negative,Cefazolin,Cephalosporin,FALSE
+kpneu,caz,89,K. pneumoniae,187,negative,Ceftazidime,Cephalosporin,FALSE
+kpneu,cro,88,K. pneumoniae,187,negative,Ceftriaxone,Cephalosporin,FALSE
+kpneu,fep,93,K. pneumoniae,187,negative,Cefepime,Cephalosporin,FALSE
+kpneu,mem,97,K. pneumoniae,187,negative,Meropenem,Carbapenem,FALSE
+kpneu,cip,85,K. pneumoniae,187,negative,Ciprofloxacin,Fluoroquinolone,FALSE
+kpneu,gen,90,K. pneumoniae,187,negative,Gentamicin,Aminoglycoside,FALSE
+kpneu,sxt,81,K. pneumoniae,187,negative,Bactrim,Folate inhibitor,FALSE
+kpneu,van,NA,K. pneumoniae,187,negative,Vancomycin,Glycopeptide,FALSE
+kpneu,lzd,NA,K. pneumoniae,187,negative,Linezolid,Oxazolidinone,FALSE
+paer,amp,NA,P. aeruginosa,143,negative,Ampicillin,Penicillin,FALSE
+paer,amc,NA,P. aeruginosa,143,negative,Amp-Sulbactam,Penicillin,FALSE
+paer,czo,NA,P. aeruginosa,143,negative,Cefazolin,Cephalosporin,FALSE
+paer,caz,83,P. aeruginosa,143,negative,Ceftazidime,Cephalosporin,FALSE
+paer,cro,NA,P. aeruginosa,143,negative,Ceftriaxone,Cephalosporin,FALSE
+paer,fep,87,P. aeruginosa,143,negative,Cefepime,Cephalosporin,FALSE
+paer,mem,85,P. aeruginosa,143,negative,Meropenem,Carbapenem,FALSE
+paer,cip,72,P. aeruginosa,143,negative,Ciprofloxacin,Fluoroquinolone,FALSE
+paer,gen,88,P. aeruginosa,143,negative,Gentamicin,Aminoglycoside,FALSE
+paer,sxt,NA,P. aeruginosa,143,negative,Bactrim,Folate inhibitor,FALSE
+paer,van,NA,P. aeruginosa,143,negative,Vancomycin,Glycopeptide,FALSE
+paer,lzd,NA,P. aeruginosa,143,negative,Linezolid,Oxazolidinone,FALSE
+ecloac,amp,NA,E. cloacae,24,negative,Ampicillin,Penicillin,TRUE
+ecloac,amc,45,E. cloacae,24,negative,Amp-Sulbactam,Penicillin,TRUE
+ecloac,czo,NA,E. cloacae,24,negative,Cefazolin,Cephalosporin,TRUE
+ecloac,caz,78,E. cloacae,24,negative,Ceftazidime,Cephalosporin,TRUE
+ecloac,cro,76,E. cloacae,24,negative,Ceftriaxone,Cephalosporin,TRUE
+ecloac,fep,95,E. cloacae,24,negative,Cefepime,Cephalosporin,TRUE
+ecloac,mem,98,E. cloacae,24,negative,Meropenem,Carbapenem,TRUE
+ecloac,cip,88,E. cloacae,24,negative,Ciprofloxacin,Fluoroquinolone,TRUE
+ecloac,gen,91,E. cloacae,24,negative,Gentamicin,Aminoglycoside,TRUE
+ecloac,sxt,83,E. cloacae,24,negative,Bactrim,Folate inhibitor,TRUE
+ecloac,van,NA,E. cloacae,24,negative,Vancomycin,Glycopeptide,TRUE
+ecloac,lzd,NA,E. cloacae,24,negative,Linezolid,Oxazolidinone,TRUE
+saur,amp,NA,S. aureus (all),356,positive,Ampicillin,Penicillin,FALSE
+saur,amc,NA,S. aureus (all),356,positive,Amp-Sulbactam,Penicillin,FALSE
+saur,czo,58,S. aureus (all),356,positive,Cefazolin,Cephalosporin,FALSE
+saur,caz,NA,S. aureus (all),356,positive,Ceftazidime,Cephalosporin,FALSE
+saur,cro,NA,S. aureus (all),356,positive,Ceftriaxone,Cephalosporin,FALSE
+saur,fep,NA,S. aureus (all),356,positive,Cefepime,Cephalosporin,FALSE
+saur,mem,NA,S. aureus (all),356,positive,Meropenem,Carbapenem,FALSE
+saur,cip,66,S. aureus (all),356,positive,Ciprofloxacin,Fluoroquinolone,FALSE
+saur,gen,95,S. aureus (all),356,positive,Gentamicin,Aminoglycoside,FALSE
+saur,sxt,96,S. aureus (all),356,positive,Bactrim,Folate inhibitor,FALSE
+saur,van,100,S. aureus (all),356,positive,Vancomycin,Glycopeptide,FALSE
+saur,lzd,100,S. aureus (all),356,positive,Linezolid,Oxazolidinone,FALSE
+mrsa,amp,NA,MRSA (subset),149,positive,Ampicillin,Penicillin,FALSE
+mrsa,amc,NA,MRSA (subset),149,positive,Amp-Sulbactam,Penicillin,FALSE
+mrsa,czo,0,MRSA (subset),149,positive,Cefazolin,Cephalosporin,FALSE
+mrsa,caz,NA,MRSA (subset),149,positive,Ceftazidime,Cephalosporin,FALSE
+mrsa,cro,NA,MRSA (subset),149,positive,Ceftriaxone,Cephalosporin,FALSE
+mrsa,fep,NA,MRSA (subset),149,positive,Cefepime,Cephalosporin,FALSE
+mrsa,mem,NA,MRSA (subset),149,positive,Meropenem,Carbapenem,FALSE
+mrsa,cip,38,MRSA (subset),149,positive,Ciprofloxacin,Fluoroquinolone,FALSE
+mrsa,gen,91,MRSA (subset),149,positive,Gentamicin,Aminoglycoside,FALSE
+mrsa,sxt,94,MRSA (subset),149,positive,Bactrim,Folate inhibitor,FALSE
+mrsa,van,100,MRSA (subset),149,positive,Vancomycin,Glycopeptide,FALSE
+mrsa,lzd,100,MRSA (subset),149,positive,Linezolid,Oxazolidinone,FALSE
+efaec,amp,96,E. faecalis,98,positive,Ampicillin,Penicillin,FALSE
+efaec,amc,NA,E. faecalis,98,positive,Amp-Sulbactam,Penicillin,FALSE
+efaec,czo,NA,E. faecalis,98,positive,Cefazolin,Cephalosporin,FALSE
+efaec,caz,NA,E. faecalis,98,positive,Ceftazidime,Cephalosporin,FALSE
+efaec,cro,NA,E. faecalis,98,positive,Ceftriaxone,Cephalosporin,FALSE
+efaec,fep,NA,E. faecalis,98,positive,Cefepime,Cephalosporin,FALSE
+efaec,mem,NA,E. faecalis,98,positive,Meropenem,Carbapenem,FALSE
+efaec,cip,62,E. faecalis,98,positive,Ciprofloxacin,Fluoroquinolone,FALSE
+efaec,gen,NA,E. faecalis,98,positive,Gentamicin,Aminoglycoside,FALSE
+efaec,sxt,NA,E. faecalis,98,positive,Bactrim,Folate inhibitor,FALSE
+efaec,van,94,E. faecalis,98,positive,Vancomycin,Glycopeptide,FALSE
+efaec,lzd,99,E. faecalis,98,positive,Linezolid,Oxazolidinone,FALSE
+efaem,amp,18,E. faecium,19,positive,Ampicillin,Penicillin,TRUE
+efaem,amc,NA,E. faecium,19,positive,Amp-Sulbactam,Penicillin,TRUE
+efaem,czo,NA,E. faecium,19,positive,Cefazolin,Cephalosporin,TRUE
+efaem,caz,NA,E. faecium,19,positive,Ceftazidime,Cephalosporin,TRUE
+efaem,cro,NA,E. faecium,19,positive,Ceftriaxone,Cephalosporin,TRUE
+efaem,fep,NA,E. faecium,19,positive,Cefepime,Cephalosporin,TRUE
+efaem,mem,NA,E. faecium,19,positive,Meropenem,Carbapenem,TRUE
+efaem,cip,12,E. faecium,19,positive,Ciprofloxacin,Fluoroquinolone,TRUE
+efaem,gen,NA,E. faecium,19,positive,Gentamicin,Aminoglycoside,TRUE
+efaem,sxt,NA,E. faecium,19,positive,Bactrim,Folate inhibitor,TRUE
+efaem,van,56,E. faecium,19,positive,Vancomycin,Glycopeptide,TRUE
+efaem,lzd,98,E. faecium,19,positive,Linezolid,Oxazolidinone,TRUE
