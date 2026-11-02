@@ -14,11 +14,11 @@ library(tidyverse)
 
 # set directory
 
-setwd("C:/Users/kwn5/OneDrive - CDC/Trainings/2026_EIS-Training_II/")
+setwd("C:/Users/kwn5/OneDrive - CDC/Trainings/2026_EIS-Training/ggplot2-tutorials")
 
 # EXAMINE DATA -----------------------------------------------------------------
 
-dat <- read.csv("data/COVID-19_Case_Surveillance_Public_Use_Data_20261019.csv")
+dat <- read.csv("Datasets/Raw/COVID-19_Case_Surveillance_Public_Use_Data_20261019.csv")
 
 # preview data
 str(dat)

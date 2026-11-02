@@ -21,7 +21,7 @@ setwd("C:\\Users\\kwn5\\OneDrive - CDC\\Trainings\\2026_EIS-Training\\ggplot2-tu
 
 # EXAMINE DATA -----------------------------------------------------------------
 
-resp_dat <- read.csv(".\\Raw\\nssp_ed_covid19_flu_rsv.csv")
+resp_dat <- read.csv(".\\Datasets\\Raw\\nssp_ed_covid19_flu_rsv.csv")
 
 # preview data 
 str(resp_dat)
